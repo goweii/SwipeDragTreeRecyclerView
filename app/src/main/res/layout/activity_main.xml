@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context="com.goweii.swipedragtreerecyclerview.activity.MainActivity">
+
+    <Button
+        android:id="@+id/btn_start_DragSwipedRecyclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="@string/btn_start_DragSwipedRecyclerView"
+        tools:layout_editor_absoluteX="86dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <Button
+        android:id="@+id/btn_start_TreeRecyclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="@string/btn_start_TreeRecyclerView"
+        tools:layout_editor_absoluteX="113dp"
+        tools:layout_editor_absoluteY="64dp" />
+
+    <Button
+        android:id="@+id/btn_start_DragSwipedTreeRecyclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="@string/btn_start_DragSwipedTreeRecyclerView"
+        tools:layout_editor_absoluteX="69dp"
+        tools:layout_editor_absoluteY="112dp" />
+</LinearLayout>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">SwipeDragTreeRecyclerView</string>
+    <string name="btn_start_DragSwipedRecyclerView">DragSwipedRecyclerView</string>
+    <string name="btn_start_TreeRecyclerView">TreeRecyclerView</string>
+    <string name="btn_start_DragSwipedTreeRecyclerView">DragSwipedTreeRecyclerView</string>
+
+    <string name="btn_open_swiped">open swiped</string>
+    <string name="btn_close_swiped">close swiped</string>
+    <string name="btn_open_drag">open drag</string>
+    <string name="btn_close_drag">close drag</string>
+</resources>
