@@ -1,8 +1,9 @@
 package com.goweii.swipedragtreerecyclerviewlibrary.adapter;
 
 import android.content.Context;
-import android.support.annotation.ColorRes;
+import android.support.annotation.ColorInt;
 import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.SparseArray;
@@ -53,7 +54,7 @@ public abstract class BaseSwipeDragAdapter extends RecyclerView.Adapter<BaseSwip
     public static final class ClickFlag {
         public static final int CANNOT = 0;
         public static final int CLICK = 1;
-        public static final int LONG = 1 << 1;
+        public static final int LONGCLICK = 1 << 1;
     }
 
     /**
@@ -89,8 +90,6 @@ public abstract class BaseSwipeDragAdapter extends RecyclerView.Adapter<BaseSwip
     /**
      * 拖拽移动位置，在实现的 onMove() 方法中调用
      * {@link SwipeDragCallback.OnItemTouchCallbackListener#onMove(int, int)}
-     * <p>
-     * 暂时仅实现同组同级别的移动，跨组移动未实现。。。
      *
      * @param fromPosition 拖拽位置
      * @param toPosition   目标位置
@@ -155,11 +154,16 @@ public abstract class BaseSwipeDragAdapter extends RecyclerView.Adapter<BaseSwip
      * @param viewType 布局类型
      * @param layoutId 布局 xml 文件的资源 id
      */
-    private void putLayoutId(int viewType, @IdRes int layoutId) {
+    private void putLayoutId(int viewType, @LayoutRes int layoutId) {
         if (mLayoutIds == null) {
             mLayoutIds = new SparseIntArray();
         }
         mLayoutIds.put(viewType, layoutId);
+    }
+
+    @LayoutRes
+    protected int getLayoutId(int viewType) {
+        return mLayoutIds.get(viewType);
     }
 
     /**
@@ -178,7 +182,7 @@ public abstract class BaseSwipeDragAdapter extends RecyclerView.Adapter<BaseSwip
         }
         for (int i = 0; i < viewIds.length; i++) {
             int viewId = viewIds[i];
-            int clickFlag = clickFlags == null ? (ClickFlag.CLICK | ClickFlag.LONG) : clickFlags[i];
+            int clickFlag = clickFlags == null ? (ClickFlag.CLICK | ClickFlag.LONGCLICK) : clickFlags[i];
             mViewIds.get(viewType).put(viewId, clickFlag);
         }
     }
@@ -268,10 +272,7 @@ public abstract class BaseSwipeDragAdapter extends RecyclerView.Adapter<BaseSwip
         }
     }
     public boolean isLongPressDragEnabled() {
-        if (mSwipeDragCallback != null) {
-            return mSwipeDragCallback.isLongPressDragEnabled();
-        }
-        return false;
+        return mSwipeDragCallback != null && mSwipeDragCallback.isLongPressDragEnabled();
     }
 
     /**
@@ -287,10 +288,7 @@ public abstract class BaseSwipeDragAdapter extends RecyclerView.Adapter<BaseSwip
         }
     }
     public boolean isItemViewSwipeEnabled() {
-        if (mSwipeDragCallback != null) {
-            return mSwipeDragCallback.isItemViewSwipeEnabled();
-        }
-        return false;
+        return mSwipeDragCallback != null && mSwipeDragCallback.isItemViewSwipeEnabled();
     }
 
     /**
@@ -298,12 +296,15 @@ public abstract class BaseSwipeDragAdapter extends RecyclerView.Adapter<BaseSwip
      * 需要在调用绑定监听器方法后调用设置，默认开启
      * {@link #setOnItemTouchCallbackListener(SwipeDragCallback.OnItemTouchCallbackListener)}
      *
-     * @param swipedBackgroundColorEnabled swipedBackgroundColorEnabled
+     * @param swipeBackgroundColorEnabled swipeBackgroundColorEnabled
      */
-    public void setSwipedBackgroundColorEnabled(boolean swipedBackgroundColorEnabled) {
+    public void setSwipeBackgroundColorEnabled(boolean swipeBackgroundColorEnabled) {
         if (mSwipeDragCallback != null) {
-            mSwipeDragCallback.setSwipeBackgroundColorEnabled(swipedBackgroundColorEnabled);
+            mSwipeDragCallback.setSwipeBackgroundColorEnabled(swipeBackgroundColorEnabled);
         }
+    }
+    public boolean isSwipedBackgroundColorEnabled() {
+        return mSwipeDragCallback != null && mSwipeDragCallback.isSwipeBackgroundColorEnabled();
     }
 
     /**
@@ -311,7 +312,7 @@ public abstract class BaseSwipeDragAdapter extends RecyclerView.Adapter<BaseSwip
      *
      * @param swipedBackgroundColor 颜色资源id
      */
-    public void setSwipedBackgroundColor(@ColorRes int swipedBackgroundColor) {
+    public void setSwipedBackgroundColor(@ColorInt int swipedBackgroundColor) {
         if (mSwipeDragCallback != null) {
             mSwipeDragCallback.setSwipeBackgroundColor(swipedBackgroundColor);
         }
@@ -322,11 +323,11 @@ public abstract class BaseSwipeDragAdapter extends RecyclerView.Adapter<BaseSwip
      * 需要在调用绑定监听器方法后调用设置，默认2个方向，垂直于列表滚动
      * {@link #setOnItemTouchCallbackListener(SwipeDragCallback.OnItemTouchCallbackListener)}
      *
-     * @param customSwipedFlag customSwipedFlag
+     * @param customSwipeFlag customSwipeFlag
      */
-    public void setCustomSwipedFlag(int customSwipedFlag) {
+    public void setCustomSwipeFlag(int customSwipeFlag) {
         if (mSwipeDragCallback != null) {
-            mSwipeDragCallback.setCustomSwipedFlag(customSwipedFlag);
+            mSwipeDragCallback.setCustomSwipeFlag(customSwipeFlag);
         }
     }
 
@@ -377,7 +378,7 @@ public abstract class BaseSwipeDragAdapter extends RecyclerView.Adapter<BaseSwip
         private boolean mIsSwiped = false;
         private static final long IS_NOT_SWIPED_LATER = 100;
 
-        private BaseViewHolder(View itemView, int viewType) {
+        public BaseViewHolder(View itemView, int viewType) {
             super(itemView);
             mViewType = viewType;
             if (mViewIds != null) {
@@ -464,7 +465,7 @@ public abstract class BaseSwipeDragAdapter extends RecyclerView.Adapter<BaseSwip
                         //  01     10      11      flag
                         //  10     10      10      &
                         //  00     10      10
-                        if ((clickFlag & ClickFlag.LONG) == ClickFlag.LONG) {
+                        if ((clickFlag & ClickFlag.LONGCLICK) == ClickFlag.LONGCLICK) {
                             view.setOnLongClickListener(new View.OnLongClickListener() {
                                 @Override
                                 public boolean onLongClick(View v) {

@@ -4,8 +4,28 @@
     <string name="btn_start_TreeRecyclerView">TreeRecyclerView</string>
     <string name="btn_start_DragSwipedTreeRecyclerView">DragSwipedTreeRecyclerView</string>
 
-    <string name="btn_open_swiped">open swiped</string>
-    <string name="btn_close_swiped">close swiped</string>
+    <string name="btn_open_swipe">open swipe</string>
+    <string name="btn_close_swipe">close swipe</string>
     <string name="btn_open_drag">open drag</string>
     <string name="btn_close_drag">close drag</string>
+    <string name="btn_open_swipe_background_color">open swipe color</string>
+    <string name="btn_close_swipe_background_color">close swipe color</string>
+
+
+    <string name="radioGroup_layoutManager">layoutManager</string>
+    <string name="radioBtn_linear">linear</string>
+    <string name="radioBtn_grad">grid</string>
+    <string name="radioBtn_staggered">staggered</string>
+
+    <string name="radioGroup_orientation">orientation</string>
+    <string name="radioBtn_vertical">vertical</string>
+    <string name="radioBtn_horizontal">horizontal</string>
+
+    <string name="checkBox_left">left</string>
+    <string name="checkBox_right">right</string>
+    <string name="checkBox_up">up</string>
+    <string name="checkBox_down">down</string>
+
+    <string name="numberPicker_dataCount">dataCount</string>
+    <string name="numberPicker_spanCount">spanCount</string>
 </resources>

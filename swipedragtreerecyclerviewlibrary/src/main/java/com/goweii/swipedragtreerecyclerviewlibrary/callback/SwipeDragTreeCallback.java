@@ -2,16 +2,15 @@ package com.goweii.swipedragtreerecyclerviewlibrary.callback;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.support.annotation.ColorRes;
+import android.graphics.Paint;
+import android.support.annotation.ColorInt;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.goweii.swipedragtreerecyclerviewlibrary.R;
-import com.goweii.swipedragtreerecyclerviewlibrary.adapter.BaseDragSwipedTreeAdapter;
+import com.goweii.swipedragtreerecyclerviewlibrary.adapter.BaseSwipeDragTreeAdapter;
 
 /**
  *
@@ -24,19 +23,19 @@ public class SwipeDragTreeCallback extends ItemTouchHelper.Callback {
     private boolean mLongPressDragEnabled = true;
     private boolean mItemViewSwipeEnabled = true;
 
-    private ImageView mSwipedBackgroundColorImage;
-    private boolean mSwipeBackgroundColorEnabled = true;
-    private int mSwipedBackgroundColor = R.color.colorSwipedBackground;
+    private Paint mPaint = null;
+    private boolean mSwipeBackgroundColorEnabled = false;
+    private @ColorInt int mSwipeBackgroundColor = 0xFFFF4081;
 
-    private int mCustomSwipedFlag = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+    private int mCustomSwipeFlag = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
     private int mCustomDragFlag = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
 
     public SwipeDragTreeCallback(Context context) {
         mContext = context;
     }
 
-    public void setCustomSwipedFlag(int customSwipedFlag) {
-        mCustomSwipedFlag = customSwipedFlag;
+    public void setCustomSwipeFlag(int customSwipeFlag) {
+        mCustomSwipeFlag = customSwipeFlag;
     }
 
     public void setCustomDragFlag(int customDragFlag) {
@@ -68,15 +67,24 @@ public class SwipeDragTreeCallback extends ItemTouchHelper.Callback {
      */
     public void setSwipeBackgroundColorEnabled(boolean swipeBackgroundColorEnabled) {
         mSwipeBackgroundColorEnabled = swipeBackgroundColorEnabled;
+        if (mSwipeBackgroundColorEnabled) {
+            mPaint = new Paint();
+            mPaint.setColor(mSwipeBackgroundColor);
+        } else {
+            mPaint = null;
+        }
     }
 
     /**
      * 设置滑动删除时背景色
      *
-     * @param swipedBackgroundColor 颜色资源id
+     * @param swipeBackgroundColor 颜色资源id
      */
-    public void setSwipedBackgroundColor(@ColorRes int swipedBackgroundColor) {
-        mSwipedBackgroundColor = swipedBackgroundColor;
+    public void setSwipeBackgroundColor(@ColorInt int swipeBackgroundColor) {
+        mSwipeBackgroundColor = swipeBackgroundColor;
+        if (mPaint != null) {
+            mPaint.setColor(mSwipeBackgroundColor);
+        }
     }
 
     @Override
@@ -93,8 +101,8 @@ public class SwipeDragTreeCallback extends ItemTouchHelper.Callback {
         return mSwipeBackgroundColorEnabled;
     }
 
-    public int getSwipedBackgroundColor() {
-        return mSwipedBackgroundColor;
+    public int getSwipeBackgroundColor() {
+        return mSwipeBackgroundColor;
     }
 
     /**
@@ -114,29 +122,77 @@ public class SwipeDragTreeCallback extends ItemTouchHelper.Callback {
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         int dragFlag = 0;
-        int swipedFlag = 0;
-        if (mLongPressDragEnabled) {
-            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-            if (layoutManager instanceof LinearLayoutManager) {
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
-                int orientation = linearLayoutManager.getOrientation();
-                switch (orientation) {
-                    case LinearLayoutManager.VERTICAL:
-                        dragFlag = mCustomDragFlag & (ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
-                        swipedFlag = mCustomSwipedFlag & (ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
-                        break;
-                    case LinearLayoutManager.HORIZONTAL:
-                        dragFlag = mCustomDragFlag & (ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
-                        swipedFlag = mCustomSwipedFlag & (ItemTouchHelper.UP | ItemTouchHelper.DOWN);
-                        break;
-                    default:
-                        break;
-                }
-            } else if (layoutManager instanceof GridLayoutManager) {
-                dragFlag = mCustomDragFlag & (ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+        int swipeFlag = 0;
+        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+        if (layoutManager instanceof LinearLayoutManager) {
+            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
+            int orientation = linearLayoutManager.getOrientation();
+            switch (orientation) {
+                case LinearLayoutManager.VERTICAL:
+                    dragFlag = (ItemTouchHelper.UP | ItemTouchHelper.DOWN);
+                    swipeFlag = (ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+                    break;
+                case LinearLayoutManager.HORIZONTAL:
+                    dragFlag = (ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+                    swipeFlag = (ItemTouchHelper.UP | ItemTouchHelper.DOWN);
+                    break;
+                default:
+                    break;
             }
         }
-        return makeMovementFlags(dragFlag, swipedFlag);
+        if (layoutManager instanceof GridLayoutManager) {
+            GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
+            int orientation = gridLayoutManager.getOrientation();
+            int spanCount = gridLayoutManager.getSpanCount();
+            switch (orientation) {
+                case GridLayoutManager.VERTICAL:
+                    if (spanCount == 1){
+                        dragFlag = (ItemTouchHelper.UP | ItemTouchHelper.DOWN);
+                    } else {
+                        dragFlag = (ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+                    }
+                    swipeFlag = (ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+                    break;
+                case GridLayoutManager.HORIZONTAL:
+                    if (spanCount == 1){
+                        dragFlag = (ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+                    } else {
+                        dragFlag = (ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+                    }
+                    swipeFlag = (ItemTouchHelper.UP | ItemTouchHelper.DOWN);
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (layoutManager instanceof StaggeredGridLayoutManager) {
+            StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
+            int orientation = staggeredGridLayoutManager.getOrientation();
+            int spanCount = staggeredGridLayoutManager.getSpanCount();
+            switch (orientation) {
+                case StaggeredGridLayoutManager.VERTICAL:
+                    if (spanCount == 1){
+                        dragFlag = (ItemTouchHelper.UP | ItemTouchHelper.DOWN);
+                    } else {
+                        dragFlag = (ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+                    }
+                    swipeFlag = (ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+                    break;
+                case StaggeredGridLayoutManager.HORIZONTAL:
+                    if (spanCount == 1){
+                        dragFlag = (ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+                    } else {
+                        dragFlag = (ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+                    }
+                    swipeFlag = (ItemTouchHelper.UP | ItemTouchHelper.DOWN);
+                    break;
+                default:
+                    break;
+            }
+        }
+        dragFlag = mCustomDragFlag & dragFlag;
+        swipeFlag = mCustomSwipeFlag & swipeFlag;
+        return makeMovementFlags(dragFlag, swipeFlag);
     }
 
     /**
@@ -148,24 +204,16 @@ public class SwipeDragTreeCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         super.onSelectedChanged(viewHolder, actionState);
-
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            if (mSwipeBackgroundColorEnabled) {
-                ViewGroup viewGroup = (ViewGroup) viewHolder.itemView;
-                ViewGroup.LayoutParams viewGroupParams = viewGroup.getLayoutParams();
-                mSwipedBackgroundColorImage = new ImageView(mContext);
-                mSwipedBackgroundColorImage.setLayoutParams(viewGroupParams);
-                viewGroup.addView(mSwipedBackgroundColorImage, -1);
+            if (mOnSelectedChangedCallbackListener != null){
+                mOnSelectedChangedCallbackListener.onSwipe(viewHolder.getAdapterPosition());
             }
-        } else if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
-            ViewGroup viewGroup = (ViewGroup) viewHolder.itemView;
-            viewGroup.animate()
-                    .translationZBy(1)
-                    .setDuration(100)
-                    .start();
+        } else if (actionState == ItemTouchHelper.ACTION_STATE_DRAG){
+            if (mOnSelectedChangedCallbackListener != null){
+                mOnSelectedChangedCallbackListener.onDrag(viewHolder.getAdapterPosition());
+            }
         }
     }
-
 
     /**
      * 在RecyclerView的onDraw回调中由ItemTouchHelper调用。
@@ -184,22 +232,18 @@ public class SwipeDragTreeCallback extends ItemTouchHelper.Callback {
      */
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        ViewGroup viewGroup = (ViewGroup) viewHolder.itemView;
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             if (mSwipeBackgroundColorEnabled) {
-                //仅对侧滑状态下的效果做出改变
-                viewGroup.scrollTo(-(int) dX, 0);
-                mSwipedBackgroundColorImage.setImageResource(mSwipedBackgroundColor);
                 float threshold = getThreshold(viewHolder);
-                mSwipedBackgroundColorImage.setAlpha(Math.abs(dX) / threshold);
-                if (dX > 0) {
-                    mSwipedBackgroundColorImage.setTranslationX(-viewHolder.itemView.getWidth());
-                } else {
-                    mSwipedBackgroundColorImage.setTranslationX(viewHolder.itemView.getWidth());
-                }
-            } else {
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                float alpha = ((Math.abs(dX + dY) / threshold) > 1 ? 1 : (Math.abs(dX + dY) / threshold));
+                mPaint.setAlpha((int) (alpha * 255));
+                int left = viewHolder.itemView.getLeft();
+                int top = viewHolder.itemView.getTop();
+                int right = viewHolder.itemView.getRight();
+                int bottom = viewHolder.itemView.getBottom();
+                c.drawRect(left, top, right, bottom, mPaint);
             }
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         } else if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         } else {
@@ -243,18 +287,6 @@ public class SwipeDragTreeCallback extends ItemTouchHelper.Callback {
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-        ViewGroup viewGroup = (ViewGroup) viewHolder.itemView;
-        if (mSwipeBackgroundColorEnabled) {
-            viewGroup.scrollTo(0, 0);
-            if (viewGroup.getChildAt(viewGroup.getChildCount() - 1) == mSwipedBackgroundColorImage) {
-                viewGroup.removeView(mSwipedBackgroundColorImage);
-            }
-        }
-        viewGroup.animate()
-                .translationZ(0)
-                .setDuration(0)
-                .scaleX(1f).scaleY(1f)
-                .start();
     }
 
     /**
@@ -270,11 +302,11 @@ public class SwipeDragTreeCallback extends ItemTouchHelper.Callback {
         if (mOnItemTouchCallbackListener != null) {
             int fromPosition = srcViewHolder.getAdapterPosition();
             int toPosition = targetViewHolder.getAdapterPosition();
-            if (BaseDragSwipedTreeAdapter.betweenHasExpand(fromPosition, toPosition)) {
+            if (BaseSwipeDragTreeAdapter.betweenHasExpand(fromPosition, toPosition)) {
                 return false;
             } else {
-                if (BaseDragSwipedTreeAdapter.isSameLevel(fromPosition, toPosition) &&
-                        BaseDragSwipedTreeAdapter.isSameGroup(fromPosition, toPosition)) {
+                if (BaseSwipeDragTreeAdapter.isSameLevel(fromPosition, toPosition) &&
+                        BaseSwipeDragTreeAdapter.isSameGroup(fromPosition, toPosition)) {
                     return mOnItemTouchCallbackListener.onMove(fromPosition, toPosition);
                 } else {
                     return false;
@@ -327,11 +359,35 @@ public class SwipeDragTreeCallback extends ItemTouchHelper.Callback {
          * 滑动删除数据
          * 实现时应该这样使用：
          * 调用 BaseDragSwipedTreeAdapter.notifyTreeItemDelete 方法更新显示，方法链接如下：
-         * {@link BaseDragSwipedTreeAdapter#notifyTreeItemDelete(int)}
+         * {@link BaseSwipeDragTreeAdapter#notifyTreeItemDelete(int)}
          * 该方法内部会自动更新数据，不需要在其之前手动中更新删除数据，否则会重复删除，使程序崩溃
          *
          * @param position 滑动的位置
          */
         void onSwiped(int position);
+    }
+
+    public void setOnSelectedChangedCallbackListener(OnSelectedChangedCallbackListener onSelectedChangedCallbackListener) {
+        if (mOnSelectedChangedCallbackListener == null) {
+            mOnSelectedChangedCallbackListener = onSelectedChangedCallbackListener;
+        }
+    }
+    
+    private OnSelectedChangedCallbackListener mOnSelectedChangedCallbackListener = null;
+
+    public interface OnSelectedChangedCallbackListener {
+        /**
+         * 开始滑动
+         *
+         * @param position position
+         */
+        void onSwipe(int position);
+
+        /**
+         * 开始拖拽
+         *
+         * @param position position
+         */
+        void onDrag(int position);
     }
 }

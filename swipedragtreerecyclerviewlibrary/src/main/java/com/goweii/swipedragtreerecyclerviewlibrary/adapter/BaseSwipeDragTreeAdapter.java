@@ -1,13 +1,12 @@
 package com.goweii.swipedragtreerecyclerviewlibrary.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.ColorRes;
+import android.support.annotation.ColorInt;
 import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.SparseArray;
-import android.util.SparseBooleanArray;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -41,7 +40,7 @@ public abstract class BaseSwipeDragTreeAdapter extends RecyclerView.Adapter<Base
 
     private SparseIntArray mLayoutIds = null;
     private SparseArray<SparseIntArray> mViewIds = null;
-    private SparseBooleanArray mStartDragView = null;
+    private SparseArray<SparseIntArray> mStartDragViewIds = null;
 
     private ArrayList<DataTree> mDataTrees = new ArrayList<>();
     private static ArrayList<PositionState> mPositionStates = new ArrayList<>();
@@ -60,7 +59,15 @@ public abstract class BaseSwipeDragTreeAdapter extends RecyclerView.Adapter<Base
     public static final class ClickFlag {
         public static final int CANNOT = 0;
         public static final int CLICK = 1;
-        public static final int LONG = 1 << 1;
+        public static final int LONGCLICK = 1 << 1;
+    }
+    /**
+     * customView 拖拽
+     */
+    public static final class StartDragFlag {
+        public static final int CANNOT = 0;
+        public static final int TOUCH = 1;
+        public static final int LONGTOUCH = 1 << 1;
     }
 
     /**
@@ -266,11 +273,16 @@ public abstract class BaseSwipeDragTreeAdapter extends RecyclerView.Adapter<Base
      * @param viewType 布局类型
      * @param layoutId 布局 xml 文件的资源 id
      */
-    private void putLayoutId(int viewType, @IdRes int layoutId) {
+    private void putLayoutId(int viewType, @LayoutRes int layoutId) {
         if (mLayoutIds == null) {
             mLayoutIds = new SparseIntArray();
         }
         mLayoutIds.put(viewType, layoutId);
+    }
+
+    @LayoutRes
+    protected int getLayoutId(int viewType) {
+        return mLayoutIds.get(viewType);
     }
 
     /**
@@ -289,7 +301,7 @@ public abstract class BaseSwipeDragTreeAdapter extends RecyclerView.Adapter<Base
         }
         for (int i = 0; i < viewIds.length; i++) {
             int viewId = viewIds[i];
-            int clickFlag = clickFlags == null ? (ClickFlag.CLICK | ClickFlag.LONG) : clickFlags[i];
+            int clickFlag = clickFlags == null ? (ClickFlag.CLICK | ClickFlag.LONGCLICK) : clickFlags[i];
             mViewIds.get(viewType).put(viewId, clickFlag);
         }
     }
@@ -481,6 +493,10 @@ public abstract class BaseSwipeDragTreeAdapter extends RecyclerView.Adapter<Base
         }
     }
 
+    public boolean isLongPressDragEnabled() {
+        return mSwipeDragTreeCallback != null && mSwipeDragTreeCallback.isLongPressDragEnabled();
+    }
+
     /**
      * 设置开启关闭滑动
      * 需要在调用绑定监听器方法后调用设置，默认开启
@@ -494,27 +510,35 @@ public abstract class BaseSwipeDragTreeAdapter extends RecyclerView.Adapter<Base
         }
     }
 
+    public boolean isItemViewSwipeEnabled() {
+        return mSwipeDragTreeCallback != null && mSwipeDragTreeCallback.isItemViewSwipeEnabled();
+    }
+
     /**
      * 设置开启关闭滑动删除时是否背景变色
      * 需要在调用绑定监听器方法后调用设置，默认开启
      * {@link #setOnItemTouchCallbackListener(SwipeDragTreeCallback.OnItemTouchCallbackListener)}
      *
-     * @param swipedBackgroundColorEnabled swipedBackgroundColorEnabled
+     * @param swipeBackgroundColorEnabled swipeBackgroundColorEnabled
      */
-    public void setSwipedBackgroundColorEnabled(boolean swipedBackgroundColorEnabled) {
+    public void setSwipeBackgroundColorEnabled(boolean swipeBackgroundColorEnabled) {
         if (mSwipeDragTreeCallback != null) {
-            mSwipeDragTreeCallback.setSwipeBackgroundColorEnabled(swipedBackgroundColorEnabled);
+            mSwipeDragTreeCallback.setSwipeBackgroundColorEnabled(swipeBackgroundColorEnabled);
         }
+    }
+
+    public boolean isSwipeBackgroundColorEnabled() {
+        return mSwipeDragTreeCallback != null && mSwipeDragTreeCallback.isSwipeBackgroundColorEnabled();
     }
 
     /**
      * 设置滑动删除时背景色
      *
-     * @param swipedBackgroundColor 颜色资源id
+     * @param swipeBackgroundColor 颜色资源id
      */
-    public void setSwipedBackgroundColor(@ColorRes int swipedBackgroundColor) {
+    public void setSwipeBackgroundColor(@ColorInt int swipeBackgroundColor) {
         if (mSwipeDragTreeCallback != null) {
-            mSwipeDragTreeCallback.setSwipedBackgroundColor(swipedBackgroundColor);
+            mSwipeDragTreeCallback.setSwipeBackgroundColor(swipeBackgroundColor);
         }
     }
 
@@ -523,11 +547,11 @@ public abstract class BaseSwipeDragTreeAdapter extends RecyclerView.Adapter<Base
      * 需要在调用绑定监听器方法后调用设置，默认2个方向，垂直于列表滚动
      * {@link #setOnItemTouchCallbackListener(SwipeDragTreeCallback.OnItemTouchCallbackListener)}
      *
-     * @param customSwipedFlag customSwipedFlag
+     * @param customSwipeFlag customSwipeFlag
      */
-    public void setCustomSwipedFlag(int customSwipedFlag) {
+    public void setCustomSwipeFlag(int customSwipeFlag) {
         if (mSwipeDragTreeCallback != null) {
-            mSwipeDragTreeCallback.setCustomSwipedFlag(customSwipedFlag);
+            mSwipeDragTreeCallback.setCustomSwipeFlag(customSwipeFlag);
         }
     }
 
@@ -558,6 +582,23 @@ public abstract class BaseSwipeDragTreeAdapter extends RecyclerView.Adapter<Base
             mItemTouchHelper = new ItemTouchHelper(mSwipeDragTreeCallback);
         }
         mSwipeDragTreeCallback.setOnItemTouchCallbackListener(onItemTouchCallbackListener);
+        mSwipeDragTreeCallback.setOnSelectedChangedCallbackListener(new SwipeDragTreeCallback.OnSelectedChangedCallbackListener() {
+            @Override
+            public void onSwipe(int position) {
+                PositionState positionState = mPositionStates.get(position);
+                if (positionState.isExpand()) {
+                    closeGroup(position, position);
+                }
+            }
+
+            @Override
+            public void onDrag(int position) {
+                PositionState positionState = mPositionStates.get(position);
+                if (positionState.isExpand()) {
+                    closeGroup(position, position);
+                }
+            }
+        });
         return mItemTouchHelper;
     }
 
@@ -569,6 +610,7 @@ public abstract class BaseSwipeDragTreeAdapter extends RecyclerView.Adapter<Base
         mItemViewLongClickEnabled = itemViewLongClickEnabled;
     }
 
+
     /**
      * BaseTreeAdapter.BaseViewHolder
      */
@@ -576,9 +618,10 @@ public abstract class BaseSwipeDragTreeAdapter extends RecyclerView.Adapter<Base
         private SparseArray<View> mViews = null;
         private int mViewType;
         private boolean mIsSwiped = false;
+        private boolean mIsStartDrag;
         private static final long IS_NOT_SWIPED_LATER = 100;
 
-        private BaseViewHolder(View itemView, int viewType) {
+        public BaseViewHolder(View itemView, int viewType) {
             super(itemView);
             mViewType = viewType;
             if (mViewIds != null) {
@@ -668,65 +711,7 @@ public abstract class BaseSwipeDragTreeAdapter extends RecyclerView.Adapter<Base
                         return false;
                     }
                 });
-            } else {
-                itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        if (!mIsSwiped) {
-                            int position = getAdapterPosition();
-                            PositionState positionState = mPositionStates.get(position);
-                            if (positionState.isExpand()) {
-                                closeGroup(position, position);
-                                LogUtil.d("---setOnLongClickListener--onLongClick-->", "onLongClick");
-                            }
-                        }
-                        return true;
-                    }
-                });
             }
-            itemView.setOnTouchListener(new View.OnTouchListener() {
-                float startX;
-                float startY;
-                int position;
-                PositionState positionState;
-                int[] positions;
-                DataTree dataTree;
-                int dx = 0;
-                int dy = 0;
-                @SuppressLint("ClickableViewAccessibility")
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    float x = event.getRawX();
-                    float y = event.getRawY();
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            startX = x;
-                            startY = y;
-                            position = getAdapterPosition();
-                            positionState = mPositionStates.get(position);
-                            positions = positionState.getPositions();
-                            dataTree = getDataTree(positions);
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            dx = (int) (x - startX);
-                            dy = (int) (y - startY);
-                            if ((Math.abs(dx) > MotionEvent.ACTION_SCROLL) && (Math.abs(dx) > Math.abs(dy))) {
-                                if (mSwipeDragTreeCallback.isItemViewSwipeEnabled()) {
-                                    mIsSwiped = true;
-                                    if (!dataTree.isLeaf() && positionState.isExpand()) {
-                                        closeGroup(position, position);
-                                        LogUtil.d("---ACTION_MOVE--closeGroup-->", "closeGroup");
-                                    }
-                                }
-                            }
-                            break;
-                        default:
-                            setIsNotSwipedLater();
-                            break;
-                    }
-                    return false;
-                }
-            });
         }
 
         /**
@@ -750,13 +735,7 @@ public abstract class BaseSwipeDragTreeAdapter extends RecyclerView.Adapter<Base
                                     if (mOnCustomViewClickListener != null) {
                                         final int position = getAdapterPosition();
                                         final int[] positions = mPositionStates.get(position).getPositions();
-//                                        if ((mStartDragView != null) && (mStartDragView.indexOfKey(viewId) > -1) && (!mStartDragView.get(viewId))) {
-//                                            setLongPressDragEnabled(true);
-//                                            mItemTouchHelper.startDrag(BaseViewHolder.this);
-//                                            setLongPressDragEnabled(false);
-//                                        } else {
                                         mOnCustomViewClickListener.onCustomViewClick(v, viewId, position, positions);
-//                                        }
                                     }
                                 }
                             });
@@ -765,7 +744,17 @@ public abstract class BaseSwipeDragTreeAdapter extends RecyclerView.Adapter<Base
                         //  01     10      11      flag
                         //  10     10      10      &
                         //  00     10      10
-                        if ((clickFlag & ClickFlag.LONG) == ClickFlag.LONG) {
+                        if ((mStartDragViewIds != null) && (mStartDragViewIds.get(mViewType) != null)) {
+                            int startDragFlag = mStartDragViewIds.get(mViewType).valueAt(i);
+                            if ((startDragFlag & StartDragFlag.LONGTOUCH) == StartDragFlag.LONGTOUCH) {
+                                mIsStartDrag = true;
+                            }
+                        }
+                        //  单击   长按  单击&长按
+                        //  01     10      11      flag
+                        //  10     10      10      &
+                        //  00     10      10
+                        if ((clickFlag & ClickFlag.LONGCLICK) == ClickFlag.LONGCLICK) {
                             view.setOnLongClickListener(new View.OnLongClickListener() {
                                 @Override
                                 public boolean onLongClick(View v) {
@@ -774,9 +763,15 @@ public abstract class BaseSwipeDragTreeAdapter extends RecyclerView.Adapter<Base
                                         final int position = getAdapterPosition();
                                         final int[] positions = mPositionStates.get(position).getPositions();
                                         final boolean dragEnabled = mSwipeDragTreeCallback.isLongPressDragEnabled();
-                                        setLongPressDragEnabled(false);
-                                        longClick = mOnCustomViewClickListener.onCustomViewLongClick(v, viewId, position, positions);
-                                        setLongPressDragEnabledLater(dragEnabled);
+                                        if (mIsStartDrag) {
+                                            setLongPressDragEnabled(false);
+                                            mItemTouchHelper.startDrag(BaseViewHolder.this);
+                                            setLongPressDragEnabled(dragEnabled);
+                                        } else {
+                                            setLongPressDragEnabled(false);
+                                            longClick = mOnCustomViewClickListener.onCustomViewLongClick(v, viewId, position, positions);
+                                            setLongPressDragEnabledLater(dragEnabled);
+                                        }
                                     }
                                     return longClick;
                                 }
@@ -785,26 +780,49 @@ public abstract class BaseSwipeDragTreeAdapter extends RecyclerView.Adapter<Base
                     }
                 }
             }
-        }
-
-        private void setIsNotSwipedLater() {
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    mIsSwiped = false;
+            if ((mStartDragViewIds != null) && (mStartDragViewIds.get(mViewType) != null)) {
+                for (int i = 0; i < mStartDragViewIds.get(mViewType).size(); i++) {
+                    int startDragFlag = mStartDragViewIds.get(mViewType).valueAt(i);
+                    //  单击   长按  单击&长按
+                    //  01     10      11      flag
+                    //  01     01      01      &
+                    //  01     00      01
+                    if ((startDragFlag & StartDragFlag.TOUCH) == StartDragFlag.TOUCH) {
+                        int viewId = mViewIds.get(mViewType).keyAt(i);
+                        View view = mViews.get(viewId);
+                        view.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                switch (event.getAction()) {
+                                    case MotionEvent.ACTION_DOWN:
+                                        final boolean dragEnabled = mSwipeDragTreeCallback.isLongPressDragEnabled();
+                                        setLongPressDragEnabled(false);
+                                        mItemTouchHelper.startDrag(BaseViewHolder.this);
+                                        setLongPressDragEnabled(dragEnabled);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                return true;
+                            }
+                        });
+                    }
                 }
-            }, IS_NOT_SWIPED_LATER);
+            }
         }
     }
 
-    protected void setStartDragOnViewClick(@IdRes int[] viewIds, boolean[] isLongClicks) {
+    protected void setStartDragViewIds(int viewType, @IdRes int[] viewIds, int[] startDragFlags) {
+        if (mStartDragViewIds == null) {
+            mStartDragViewIds = new SparseArray<>();
+        }
+        if (mStartDragViewIds.get(viewType) == null) {
+            mStartDragViewIds.put(viewType, new SparseIntArray());
+        }
         for (int i = 0; i < viewIds.length; i++) {
             int viewId = viewIds[i];
-            boolean isLongClick = isLongClicks != null && (i >= isLongClicks.length && isLongClicks[i]);
-            if (mStartDragView == null) {
-                mStartDragView = new SparseBooleanArray();
-            }
-            mStartDragView.put(viewId, isLongClick);
+            int startDragFlag = startDragFlags == null ? (StartDragFlag.TOUCH | StartDragFlag.LONGTOUCH) : startDragFlags[i];
+            mStartDragViewIds.get(viewType).put(viewId, startDragFlag);
         }
     }
 

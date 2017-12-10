@@ -9,6 +9,15 @@ import android.util.Log;
  */
 
 public class LogUtil {
+    //Object
+    public static void d(String tag, Object msg, String prefix) {
+        Log.d(tag, "" + prefix + msg.toString());
+    }
+    public static void d(String tag, Object msg) {
+        Log.d(tag, "" + msg.toString());
+    }
+
+    //int
     public static void d(String tag, int msg, String prefix) {
         Log.d(tag, "" + prefix + msg);
     }
@@ -16,6 +25,7 @@ public class LogUtil {
         Log.d(tag, "" + msg);
     }
 
+    //int[]
     public static void d(String tag, int[] msg, String prefix) {
         StringBuffer s = new StringBuffer(",");
         for (int i : msg) {
@@ -31,12 +41,15 @@ public class LogUtil {
         Log.d(tag, s.substring(1));
     }
 
+    //string
     public static void d(String tag, String msg, String prefix) {
         Log.d(tag, prefix + msg);
     }
     public static void d(String tag, String msg) {
         Log.d(tag,  msg);
     }
+
+    //boolean
     public static void d(String tag, boolean msg, String prefix) {
         Log.d(tag, prefix + (msg ? "true" : "false"));
     }
