@@ -13,11 +13,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 
-import com.goweii.swipedragtreerecyclerview.adapter.SwipeDragAdapter;
+import com.goweii.swipedragtreerecyclerview.adapter.TestBaseSwipeDragAdapter;
+import com.goweii.swipedragtreerecyclerview.util.ToastUtil;
+import com.goweii.swipedragtreerecyclerviewlibrary.adapter.BaseTypeAdapter;
 import com.goweii.swipedragtreerecyclerviewlibrary.callback.SwipeDragCallback;
-import com.goweii.swipedragtreerecyclerviewlibrary.entity.BaseData;
-import com.goweii.swipedragtreerecyclerviewlibrary.entity.BasePositionState;
-import com.goweii.swipedragtreerecyclerviewlibrary.util.LogUtil;
+import com.goweii.swipedragtreerecyclerviewlibrary.entity.TypeData;
+import com.goweii.swipedragtreerecyclerviewlibrary.entity.TypeState;
 
 import java.util.ArrayList;
 
@@ -25,10 +26,8 @@ import java.util.ArrayList;
  * @author cuizhen
  */
 public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener, CompoundButton.OnCheckedChangeListener {
-    private RecyclerView mDragSwipedRecyclerView;
-    private SwipeDragAdapter mSwipeDragAdapter;
-    private ArrayList<BaseData> mBaseDatas = null;
-    private Button mBtnOpenCloseSwiped;
+
+    private Button mBtnOpenCloseSwipe;
     private Button mBtnOpenCloseDrag;
     private Button mBtnOpenCloseSwipeBackgroundColor;
     private RadioGroup mRadioGroupCheckDragFlag;
@@ -42,9 +41,12 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
     private CheckBox mCheckBoxSwipeFlagRight;
     private CheckBox mCheckBoxSwipeFlagUp;
     private CheckBox mCheckBoxSwipeFlagDown;
-
     private int dragFlag = 0;
     private int swipeFlag = 0;
+
+    private ArrayList<TypeData> mDatas = null;
+    private RecyclerView mDragSwipedRecyclerView;
+    private TestBaseSwipeDragAdapter mTestBaseSwipeDragAdapter;
     private int mLayoutManagerType;
     private int mOrientationType;
     private int mSpanCount;
@@ -61,6 +63,7 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
         mSpanCount = intent.getIntExtra(MainActivity.SpanCount.NAME, MainActivity.SpanCount.DEFAULT);
         mDataCount = intent.getIntExtra(MainActivity.DataCount.NAME, MainActivity.DataCount.DEFAULT);
 
+        initData();
         initView();
         initSwipeDragFlag();
         initRecyclerView();
@@ -69,8 +72,8 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
 
     private void initView() {
         mDragSwipedRecyclerView = findViewById(R.id.swipe_drag_recyclerView);
-        mBtnOpenCloseSwiped = findViewById(R.id.btn_open_close_swipe);
-        mBtnOpenCloseSwiped.setOnClickListener(this);
+        mBtnOpenCloseSwipe = findViewById(R.id.btn_open_close_swipe);
+        mBtnOpenCloseSwipe.setOnClickListener(this);
         mBtnOpenCloseDrag = findViewById(R.id.btn_open_close_drag);
         mBtnOpenCloseDrag.setOnClickListener(this);
         mBtnOpenCloseSwipeBackgroundColor = findViewById(R.id.btn_open_close_swipe_background_color);
@@ -105,12 +108,12 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
             case MainActivity.LayoutManagerType.LINEAR:
                 switch (mOrientationType) {
                     case MainActivity.OrientationType.VERTICAL:
-                        dragFlag = (SwipeDragAdapter.TouchFlag.UP | SwipeDragAdapter.TouchFlag.DOWN);
-                        swipeFlag = (SwipeDragAdapter.TouchFlag.LEFT | SwipeDragAdapter.TouchFlag.RIGHT);
+                        dragFlag = (TestBaseSwipeDragAdapter.TouchFlag.UP | TestBaseSwipeDragAdapter.TouchFlag.DOWN);
+                        swipeFlag = (TestBaseSwipeDragAdapter.TouchFlag.LEFT | TestBaseSwipeDragAdapter.TouchFlag.RIGHT);
                         break;
                     case MainActivity.OrientationType.HORIZONTAL:
-                        dragFlag = (SwipeDragAdapter.TouchFlag.LEFT | SwipeDragAdapter.TouchFlag.RIGHT);
-                        swipeFlag = (SwipeDragAdapter.TouchFlag.UP | SwipeDragAdapter.TouchFlag.DOWN);
+                        dragFlag = (TestBaseSwipeDragAdapter.TouchFlag.LEFT | TestBaseSwipeDragAdapter.TouchFlag.RIGHT);
+                        swipeFlag = (TestBaseSwipeDragAdapter.TouchFlag.UP | TestBaseSwipeDragAdapter.TouchFlag.DOWN);
                         break;
                     default:
                         break;
@@ -120,19 +123,19 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
                 switch (mOrientationType) {
                     case MainActivity.OrientationType.VERTICAL:
                         if (mSpanCount == 1) {
-                            dragFlag = (SwipeDragAdapter.TouchFlag.UP | SwipeDragAdapter.TouchFlag.DOWN);
+                            dragFlag = (TestBaseSwipeDragAdapter.TouchFlag.UP | TestBaseSwipeDragAdapter.TouchFlag.DOWN);
                         } else {
-                            dragFlag = (SwipeDragAdapter.TouchFlag.UP | SwipeDragAdapter.TouchFlag.DOWN | SwipeDragAdapter.TouchFlag.LEFT | SwipeDragAdapter.TouchFlag.RIGHT);
+                            dragFlag = (TestBaseSwipeDragAdapter.TouchFlag.UP | TestBaseSwipeDragAdapter.TouchFlag.DOWN | TestBaseSwipeDragAdapter.TouchFlag.LEFT | TestBaseSwipeDragAdapter.TouchFlag.RIGHT);
                         }
-                        swipeFlag = (SwipeDragAdapter.TouchFlag.LEFT | SwipeDragAdapter.TouchFlag.RIGHT);
+                        swipeFlag = (TestBaseSwipeDragAdapter.TouchFlag.LEFT | TestBaseSwipeDragAdapter.TouchFlag.RIGHT);
                         break;
                     case MainActivity.OrientationType.HORIZONTAL:
                         if (mSpanCount == 1) {
-                            dragFlag = (SwipeDragAdapter.TouchFlag.LEFT | SwipeDragAdapter.TouchFlag.RIGHT);
+                            dragFlag = (TestBaseSwipeDragAdapter.TouchFlag.LEFT | TestBaseSwipeDragAdapter.TouchFlag.RIGHT);
                         } else {
-                            dragFlag = (SwipeDragAdapter.TouchFlag.UP | SwipeDragAdapter.TouchFlag.DOWN | SwipeDragAdapter.TouchFlag.LEFT | SwipeDragAdapter.TouchFlag.RIGHT);
+                            dragFlag = (TestBaseSwipeDragAdapter.TouchFlag.UP | TestBaseSwipeDragAdapter.TouchFlag.DOWN | TestBaseSwipeDragAdapter.TouchFlag.LEFT | TestBaseSwipeDragAdapter.TouchFlag.RIGHT);
                         }
-                        swipeFlag = (SwipeDragAdapter.TouchFlag.UP | SwipeDragAdapter.TouchFlag.DOWN);
+                        swipeFlag = (TestBaseSwipeDragAdapter.TouchFlag.UP | TestBaseSwipeDragAdapter.TouchFlag.DOWN);
                         break;
                     default:
                         break;
@@ -142,19 +145,19 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
                 switch (mOrientationType) {
                     case MainActivity.OrientationType.VERTICAL:
                         if (mSpanCount == 1) {
-                            dragFlag = (SwipeDragAdapter.TouchFlag.UP | SwipeDragAdapter.TouchFlag.DOWN);
+                            dragFlag = (TestBaseSwipeDragAdapter.TouchFlag.UP | TestBaseSwipeDragAdapter.TouchFlag.DOWN);
                         } else {
-                            dragFlag = (SwipeDragAdapter.TouchFlag.UP | SwipeDragAdapter.TouchFlag.DOWN | SwipeDragAdapter.TouchFlag.LEFT | SwipeDragAdapter.TouchFlag.RIGHT);
+                            dragFlag = (TestBaseSwipeDragAdapter.TouchFlag.UP | TestBaseSwipeDragAdapter.TouchFlag.DOWN | TestBaseSwipeDragAdapter.TouchFlag.LEFT | TestBaseSwipeDragAdapter.TouchFlag.RIGHT);
                         }
-                        swipeFlag = (SwipeDragAdapter.TouchFlag.LEFT | SwipeDragAdapter.TouchFlag.RIGHT);
+                        swipeFlag = (TestBaseSwipeDragAdapter.TouchFlag.LEFT | TestBaseSwipeDragAdapter.TouchFlag.RIGHT);
                         break;
                     case MainActivity.OrientationType.HORIZONTAL:
                         if (mSpanCount == 1) {
-                            dragFlag = (SwipeDragAdapter.TouchFlag.LEFT | SwipeDragAdapter.TouchFlag.RIGHT);
+                            dragFlag = (TestBaseSwipeDragAdapter.TouchFlag.LEFT | TestBaseSwipeDragAdapter.TouchFlag.RIGHT);
                         } else {
-                            dragFlag = (SwipeDragAdapter.TouchFlag.UP | SwipeDragAdapter.TouchFlag.DOWN | SwipeDragAdapter.TouchFlag.LEFT | SwipeDragAdapter.TouchFlag.RIGHT);
+                            dragFlag = (TestBaseSwipeDragAdapter.TouchFlag.UP | TestBaseSwipeDragAdapter.TouchFlag.DOWN | TestBaseSwipeDragAdapter.TouchFlag.LEFT | TestBaseSwipeDragAdapter.TouchFlag.RIGHT);
                         }
-                        swipeFlag = (SwipeDragAdapter.TouchFlag.UP | SwipeDragAdapter.TouchFlag.DOWN);
+                        swipeFlag = (TestBaseSwipeDragAdapter.TouchFlag.UP | TestBaseSwipeDragAdapter.TouchFlag.DOWN);
                         break;
                     default:
                         break;
@@ -172,35 +175,35 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
         for (int i = 0; i < mRadioGroupCheckDragFlag.getChildCount(); i++) {
             mRadioGroupCheckDragFlag.getChildAt(i).setEnabled(false);
         }
-        if ((swipeFlag & SwipeDragAdapter.TouchFlag.LEFT) != 0){
+        if ((swipeFlag & TestBaseSwipeDragAdapter.TouchFlag.LEFT) != 0){
             mCheckBoxSwipeFlagLeft.setEnabled(true);
             mCheckBoxSwipeFlagLeft.setChecked(true);
         }
-        if ((swipeFlag & SwipeDragAdapter.TouchFlag.RIGHT) != 0){
+        if ((swipeFlag & TestBaseSwipeDragAdapter.TouchFlag.RIGHT) != 0){
             mCheckBoxSwipeFlagRight.setEnabled(true);
             mCheckBoxSwipeFlagRight.setChecked(true);
         }
-        if ((swipeFlag & SwipeDragAdapter.TouchFlag.UP) != 0){
+        if ((swipeFlag & TestBaseSwipeDragAdapter.TouchFlag.UP) != 0){
             mCheckBoxSwipeFlagUp.setEnabled(true);
             mCheckBoxSwipeFlagUp.setChecked(true);
         }
-        if ((swipeFlag & SwipeDragAdapter.TouchFlag.DOWN) != 0){
+        if ((swipeFlag & TestBaseSwipeDragAdapter.TouchFlag.DOWN) != 0){
             mCheckBoxSwipeFlagDown.setEnabled(true);
             mCheckBoxSwipeFlagDown.setChecked(true);
         }
-        if ((dragFlag & SwipeDragAdapter.TouchFlag.LEFT) != 0){
+        if ((dragFlag & TestBaseSwipeDragAdapter.TouchFlag.LEFT) != 0){
             mCheckBoxDragFlagLeft.setEnabled(true);
             mCheckBoxDragFlagLeft.setChecked(true);
         }
-        if ((dragFlag & SwipeDragAdapter.TouchFlag.RIGHT) != 0){
+        if ((dragFlag & TestBaseSwipeDragAdapter.TouchFlag.RIGHT) != 0){
             mCheckBoxDragFlagRight.setEnabled(true);
             mCheckBoxDragFlagRight.setChecked(true);
         }
-        if ((dragFlag & SwipeDragAdapter.TouchFlag.UP) != 0){
+        if ((dragFlag & TestBaseSwipeDragAdapter.TouchFlag.UP) != 0){
             mCheckBoxDragFlagUp.setEnabled(true);
             mCheckBoxDragFlagUp.setChecked(true);
         }
-        if ((dragFlag & SwipeDragAdapter.TouchFlag.DOWN) != 0){
+        if ((dragFlag & TestBaseSwipeDragAdapter.TouchFlag.DOWN) != 0){
             mCheckBoxDragFlagDown.setEnabled(true);
             mCheckBoxDragFlagDown.setChecked(true);
         }
@@ -253,29 +256,53 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
 
     private void initRecyclerView() {
         mDragSwipedRecyclerView.setLayoutManager(getLayoutManager());
-        mSwipeDragAdapter = new SwipeDragAdapter(this, mOrientationType);
-        mDragSwipedRecyclerView.setAdapter(mSwipeDragAdapter);
-        initData();
-        mSwipeDragAdapter.initDatas(mBaseDatas);
-        mSwipeDragAdapter.setOnItemTouchCallbackListener(new SwipeDragCallback.OnItemTouchCallbackListener() {
+        mTestBaseSwipeDragAdapter = new TestBaseSwipeDragAdapter(mOrientationType);
+        mDragSwipedRecyclerView.setAdapter(mTestBaseSwipeDragAdapter);
+        mTestBaseSwipeDragAdapter.init(mDatas);
+        mTestBaseSwipeDragAdapter.setOnItemTouchCallbackListener(new SwipeDragCallback.OnItemTouchCallbackListener() {
             @Override
             public boolean onMove(int fromPosition, int toPosition) {
-                mSwipeDragAdapter.notifyItemDrag(fromPosition, toPosition);
+                mTestBaseSwipeDragAdapter.notifyItemDrag(fromPosition, toPosition);
                 return true;
             }
-
             @Override
             public void onSwiped(int position) {
-                mSwipeDragAdapter.notifyItemSwiped(position);
+                mTestBaseSwipeDragAdapter.notifyItemSwiped(position);
             }
         }).attachToRecyclerView(mDragSwipedRecyclerView);
-        mSwipeDragAdapter.setSwipeBackgroundColorEnabled(true);
+        mTestBaseSwipeDragAdapter.setSwipeBackgroundColorEnabled(true);
+        mTestBaseSwipeDragAdapter.setOnItemViewClickListener(new BaseTypeAdapter.OnItemViewClickListener() {
+            @Override
+            public void onItemViewClick(View view, int position) {
+                ToastUtil.show(getApplicationContext(), position, "onItemViewClick");
+            }
+        });
+        mTestBaseSwipeDragAdapter.setOnItemViewLongClickListener(new BaseTypeAdapter.OnItemViewLongClickListener() {
+            @Override
+            public boolean onItemViewLongClick(View view, int position) {
+                ToastUtil.show(getApplicationContext(), position, "onItemViewLongClick");
+                return true;
+            }
+        });
+        mTestBaseSwipeDragAdapter.setOnCustomViewClickListener(new BaseTypeAdapter.OnCustomViewClickListener() {
+            @Override
+            public void onCustomViewClick(View view, int position) {
+                ToastUtil.show(getApplicationContext(), position, "onCustomViewClick");
+            }
+        });
+        mTestBaseSwipeDragAdapter.setOnCustomViewLongClickListener(new BaseTypeAdapter.OnCustomViewLongClickListener() {
+            @Override
+            public boolean onCustomViewLongClick(View view, int position) {
+                ToastUtil.show(getApplicationContext(), position, "onCustomViewLongClick");
+                return true;
+            }
+        });
     }
 
     private void initData() {
-        mBaseDatas = new ArrayList<>();
+        mDatas = new ArrayList<>();
         for (int i = 0; i < mDataCount; i++) {
-            mBaseDatas.add(new BaseData("测试数据" + i, BasePositionState.TYPE_LEAF));
+            mDatas.add(new TypeData("测试数据" + i, TypeState.TYPE_LEAF));
         }
     }
 
@@ -297,21 +324,21 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
     }
 
     private void openCloseSwipe() {
-        boolean isEnabled = !mSwipeDragAdapter.isItemViewSwipeEnabled();
-        mSwipeDragAdapter.setItemViewSwipeEnabled(isEnabled);
+        boolean isEnabled = !mTestBaseSwipeDragAdapter.isItemViewSwipeEnabled();
+        mTestBaseSwipeDragAdapter.setItemViewSwipeEnabled(isEnabled);
         if (isEnabled) {
-            mBtnOpenCloseSwiped.setText(R.string.btn_close_swipe);
+            mBtnOpenCloseSwipe.setText(R.string.btn_close_swipe);
             enableRadioGroup(mRadioGroupCheckSwipeFlag);
         } else {
-            mBtnOpenCloseSwiped.setText(R.string.btn_open_swipe);
+            mBtnOpenCloseSwipe.setText(R.string.btn_open_swipe);
             disableRadioGroup(mRadioGroupCheckSwipeFlag);
         }
     }
 
 
     private void openCloseDrag() {
-        boolean isEnabled = !mSwipeDragAdapter.isLongPressDragEnabled();
-        mSwipeDragAdapter.setLongPressDragEnabled(isEnabled);
+        boolean isEnabled = !mTestBaseSwipeDragAdapter.isLongPressDragEnabled();
+        mTestBaseSwipeDragAdapter.setLongPressDragEnabled(isEnabled);
         if (isEnabled) {
             mBtnOpenCloseDrag.setText(R.string.btn_close_drag);
             enableRadioGroup(mRadioGroupCheckDragFlag);
@@ -322,8 +349,8 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
     }
 
     private void openCloseSwipeBackgroundColor() {
-        boolean isEnabled = !mSwipeDragAdapter.isSwipedBackgroundColorEnabled();
-        mSwipeDragAdapter.setSwipeBackgroundColorEnabled(isEnabled);
+        boolean isEnabled = !mTestBaseSwipeDragAdapter.isSwipeBackgroundColorEnabled();
+        mTestBaseSwipeDragAdapter.setSwipeBackgroundColorEnabled(isEnabled);
         if (isEnabled) {
             mBtnOpenCloseSwipeBackgroundColor.setText(R.string.btn_close_swipe_background_color);
             enableRadioGroup(mRadioGroupChooseSwipeColor);
@@ -349,16 +376,16 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
             case R.id.radioBtn_swipe_color_red:
-                mSwipeDragAdapter.setSwipedBackgroundColor(0xFFFF4081);
+                mTestBaseSwipeDragAdapter.setSwipeBackgroundColor(0xFFFF4081);
                 break;
             case R.id.radioBtn_swipe_color_green:
-                mSwipeDragAdapter.setSwipedBackgroundColor(0xff669900);
+                mTestBaseSwipeDragAdapter.setSwipeBackgroundColor(0xff669900);
                 break;
             case R.id.radioBtn_swipe_color_blue:
-                mSwipeDragAdapter.setSwipedBackgroundColor(0xFF303F9F);
+                mTestBaseSwipeDragAdapter.setSwipeBackgroundColor(0xFF303F9F);
                 break;
             case R.id.radioBtn_swipe_color_yellow:
-                mSwipeDragAdapter.setSwipedBackgroundColor(0xffff8800);
+                mTestBaseSwipeDragAdapter.setSwipeBackgroundColor(0xffff8800);
                 break;
             default:
                 break;
@@ -369,28 +396,28 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
             case R.id.checkBox_drag_flag_left:
-                changeDragFlag(isChecked, SwipeDragAdapter.TouchFlag.LEFT);
+                changeDragFlag(isChecked, TestBaseSwipeDragAdapter.TouchFlag.LEFT);
                 break;
             case R.id.checkBox_drag_flag_right:
-                changeDragFlag(isChecked, SwipeDragAdapter.TouchFlag.RIGHT);
+                changeDragFlag(isChecked, TestBaseSwipeDragAdapter.TouchFlag.RIGHT);
                 break;
             case R.id.checkBox_drag_flag_up:
-                changeDragFlag(isChecked, SwipeDragAdapter.TouchFlag.UP);
+                changeDragFlag(isChecked, TestBaseSwipeDragAdapter.TouchFlag.UP);
                 break;
             case R.id.checkBox_drag_flag_down:
-                changeDragFlag(isChecked, SwipeDragAdapter.TouchFlag.DOWN);
+                changeDragFlag(isChecked, TestBaseSwipeDragAdapter.TouchFlag.DOWN);
                 break;
             case R.id.checkBox_swipe_flag_left:
-                changeSwipeFlag(isChecked, SwipeDragAdapter.TouchFlag.LEFT);
+                changeSwipeFlag(isChecked, TestBaseSwipeDragAdapter.TouchFlag.LEFT);
                 break;
             case R.id.checkBox_swipe_flag_right:
-                changeSwipeFlag(isChecked, SwipeDragAdapter.TouchFlag.RIGHT);
+                changeSwipeFlag(isChecked, TestBaseSwipeDragAdapter.TouchFlag.RIGHT);
                 break;
             case R.id.checkBox_swipe_flag_up:
-                changeSwipeFlag(isChecked, SwipeDragAdapter.TouchFlag.UP);
+                changeSwipeFlag(isChecked, TestBaseSwipeDragAdapter.TouchFlag.UP);
                 break;
             case R.id.checkBox_swipe_flag_down:
-                changeSwipeFlag(isChecked, SwipeDragAdapter.TouchFlag.DOWN);
+                changeSwipeFlag(isChecked, TestBaseSwipeDragAdapter.TouchFlag.DOWN);
                 break;
             default:
                 break;
@@ -404,8 +431,7 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
         } else {
             dragFlag = dragFlag & (~touchFlag);
         }
-        mSwipeDragAdapter.setCustomDragFlag(dragFlag);
-        LogUtil.d("---dragFlag, swipeFlag-->", dragFlag + ", " + swipeFlag);
+        mTestBaseSwipeDragAdapter.setCustomDragFlag(dragFlag);
     }
 
     private void changeSwipeFlag(boolean change, int touchFlag) {
@@ -414,7 +440,6 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
         } else {
             swipeFlag = swipeFlag & (~touchFlag);
         }
-        mSwipeDragAdapter.setCustomSwipeFlag(swipeFlag);
-        LogUtil.d("---dragFlag, swipeFlag-->", dragFlag + ", " + swipeFlag);
+        mTestBaseSwipeDragAdapter.setCustomSwipeFlag(swipeFlag);
     }
 }

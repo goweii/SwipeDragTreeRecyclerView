@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">SwipeDragTreeRecyclerView</string>
-    <string name="btn_start_DragSwipedRecyclerView">DragSwipedRecyclerView</string>
-    <string name="btn_start_TreeRecyclerView">TreeRecyclerView</string>
-    <string name="btn_start_DragSwipedTreeRecyclerView">DragSwipedTreeRecyclerView</string>
+    <string name="radioBtn_swipeDragRecyclerView">SwipeDragRecyclerView</string>
+    <string name="radioBtn_swipeDragTreeRecyclerView">SwipeDragTreeRecyclerView</string>
+    <string name="btn_start">Start</string>
 
     <string name="btn_open_swipe">open swipe</string>
     <string name="btn_close_swipe">close swipe</string>
@@ -10,6 +10,10 @@
     <string name="btn_close_drag">close drag</string>
     <string name="btn_open_swipe_background_color">open swipe color</string>
     <string name="btn_close_swipe_background_color">close swipe color</string>
+    <string name="btn_open_memory_expand">open memory expand</string>
+    <string name="btn_close_memory_expand">close memory expand</string>
+    <string name="btn_expand_all">expand all</string>
+    <string name="btn_unexpand_all">unexpand all</string>
 
 
     <string name="radioGroup_layoutManager">layoutManager</string>
@@ -28,4 +32,6 @@
 
     <string name="numberPicker_dataCount">dataCount</string>
     <string name="numberPicker_spanCount">spanCount</string>
+    <string name="numberPicker_levelCount">levelCount</string>
+    <string name="numberPicker_subCount">subCount</string>
 </resources>

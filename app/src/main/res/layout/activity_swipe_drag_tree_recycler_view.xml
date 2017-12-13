@@ -176,10 +176,32 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_open_close_memory_expand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_close_memory_expand" />
+
+            <Button
+                android:id="@+id/btn_expand_unexpand_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_expand_all" />
+        </LinearLayout>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/swipe_drag_tree_recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent" >
+
+        </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
 

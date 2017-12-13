@@ -1,6 +1,5 @@
 package com.goweii.swipedragtreerecyclerviewlibrary.callback;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
@@ -16,27 +15,25 @@ import android.support.v7.widget.helper.ItemTouchHelper;
  * @date 2017/11/21
  */
 public class SwipeDragCallback extends ItemTouchHelper.Callback {
-    private Context mContext;
-
+    private Paint mPaint = null;
     private boolean mLongPressDragEnabled = true;
     private boolean mItemViewSwipeEnabled = true;
-
-    private Paint mPaint = null;
     private boolean mSwipeBackgroundColorEnabled = false;
-    private @ColorInt int mSwipeBackgroundColor = 0xFFFF4081;
-
+    private @ColorInt
+    int mSwipeBackgroundColor = 0xFFFF4081;
     private int mCustomSwipeFlag = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
     private int mCustomDragFlag = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
 
-    public SwipeDragCallback(Context context) {
-        mContext = context;
+    private OnItemTouchCallbackListener mOnItemTouchCallbackListener = null;
+
+    public SwipeDragCallback() {
     }
 
-    public void setCustomSwipeFlag(int customSwipeFlag) {
+    public final void setCustomSwipeFlag(int customSwipeFlag) {
         mCustomSwipeFlag = customSwipeFlag;
     }
 
-    public void setCustomDragFlag(int customDragFlag) {
+    public final void setCustomDragFlag(int customDragFlag) {
         mCustomDragFlag = customDragFlag;
     }
 
@@ -45,7 +42,7 @@ public class SwipeDragCallback extends ItemTouchHelper.Callback {
      *
      * @param longPressDragEnabled longPressDragEnabled
      */
-    public void setLongPressDragEnabled(boolean longPressDragEnabled) {
+    public final void setLongPressDragEnabled(boolean longPressDragEnabled) {
         this.mLongPressDragEnabled = longPressDragEnabled;
     }
 
@@ -54,7 +51,7 @@ public class SwipeDragCallback extends ItemTouchHelper.Callback {
      *
      * @param itemViewSwipeEnabled itemViewSwipeEnabled
      */
-    public void setItemViewSwipeEnabled(boolean itemViewSwipeEnabled) {
+    public final void setItemViewSwipeEnabled(boolean itemViewSwipeEnabled) {
         this.mItemViewSwipeEnabled = itemViewSwipeEnabled;
     }
 
@@ -63,7 +60,7 @@ public class SwipeDragCallback extends ItemTouchHelper.Callback {
      *
      * @param swipeBackgroundColorEnabled swipeBackgroundColorEnabled
      */
-    public void setSwipeBackgroundColorEnabled(boolean swipeBackgroundColorEnabled) {
+    public final void setSwipeBackgroundColorEnabled(boolean swipeBackgroundColorEnabled) {
         mSwipeBackgroundColorEnabled = swipeBackgroundColorEnabled;
         if (mSwipeBackgroundColorEnabled) {
             mPaint = new Paint();
@@ -78,7 +75,7 @@ public class SwipeDragCallback extends ItemTouchHelper.Callback {
      *
      * @param swipeBackgroundColor 颜色资源id
      */
-    public void setSwipeBackgroundColor(@ColorInt int swipeBackgroundColor) {
+    public final void setSwipeBackgroundColor(@ColorInt int swipeBackgroundColor) {
         mSwipeBackgroundColor = swipeBackgroundColor;
         if (mPaint != null) {
             mPaint.setColor(mSwipeBackgroundColor);
@@ -86,20 +83,20 @@ public class SwipeDragCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public boolean isLongPressDragEnabled() {
+    public final boolean isLongPressDragEnabled() {
         return mLongPressDragEnabled;
     }
 
     @Override
-    public boolean isItemViewSwipeEnabled() {
+    public final boolean isItemViewSwipeEnabled() {
         return mItemViewSwipeEnabled;
     }
 
-    public boolean isSwipeBackgroundColorEnabled() {
+    public final boolean isSwipeBackgroundColorEnabled() {
         return mSwipeBackgroundColorEnabled;
     }
 
-    public int getSwipeBackgroundColor() {
+    public final int getSwipeBackgroundColor() {
         return mSwipeBackgroundColor;
     }
 
@@ -144,7 +141,7 @@ public class SwipeDragCallback extends ItemTouchHelper.Callback {
             int spanCount = gridLayoutManager.getSpanCount();
             switch (orientation) {
                 case GridLayoutManager.VERTICAL:
-                    if (spanCount == 1){
+                    if (spanCount == 1) {
                         dragFlag = (ItemTouchHelper.UP | ItemTouchHelper.DOWN);
                     } else {
                         dragFlag = (ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
@@ -152,7 +149,7 @@ public class SwipeDragCallback extends ItemTouchHelper.Callback {
                     swipeFlag = (ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
                     break;
                 case GridLayoutManager.HORIZONTAL:
-                    if (spanCount == 1){
+                    if (spanCount == 1) {
                         dragFlag = (ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
                     } else {
                         dragFlag = (ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
@@ -169,7 +166,7 @@ public class SwipeDragCallback extends ItemTouchHelper.Callback {
             int spanCount = staggeredGridLayoutManager.getSpanCount();
             switch (orientation) {
                 case StaggeredGridLayoutManager.VERTICAL:
-                    if (spanCount == 1){
+                    if (spanCount == 1) {
                         dragFlag = (ItemTouchHelper.UP | ItemTouchHelper.DOWN);
                     } else {
                         dragFlag = (ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
@@ -177,7 +174,7 @@ public class SwipeDragCallback extends ItemTouchHelper.Callback {
                     swipeFlag = (ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
                     break;
                 case StaggeredGridLayoutManager.HORIZONTAL:
-                    if (spanCount == 1){
+                    if (spanCount == 1) {
                         dragFlag = (ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
                     } else {
                         dragFlag = (ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
@@ -194,22 +191,8 @@ public class SwipeDragCallback extends ItemTouchHelper.Callback {
     }
 
     /**
-     * 从静止状态变为拖拽或者滑动的时候会回调该方法，参数actionState表示当前的状态。
-     *
-     * @param viewHolder  viewHolder
-     * @param actionState actionState
-     */
-    @Override
-    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-        super.onSelectedChanged(viewHolder, actionState);
-    }
-
-    /**
      * 在RecyclerView的onDraw回调中由ItemTouchHelper调用。
      * 我们可以在这个方法内实现我们自定义的交互规则或者自定义的动画效果。
-     * ---------------------------------------------------------------------
-     * ---注意:为确保滑动时出现红色背景动画, item 的根布局应当采用 FrameLayout ---
-     * ---------------------------------------------------------------------
      *
      * @param c                 Canvas
      * @param recyclerView      recyclerView
@@ -267,17 +250,25 @@ public class SwipeDragCallback extends ItemTouchHelper.Callback {
      *
      * @param recyclerView     recyclerView
      * @param srcViewHolder    拖拽的
-     * @param targetViewHolder 目的地
+     * @param targetViewHolder 目标的
      * @return boolean
      */
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder srcViewHolder, RecyclerView.ViewHolder targetViewHolder) {
         if (mOnItemTouchCallbackListener != null) {
-            return mOnItemTouchCallbackListener.onMove(srcViewHolder.getAdapterPosition(), targetViewHolder.getAdapterPosition());
+            int srcPosition = srcViewHolder.getAdapterPosition();
+            int targetPosition = targetViewHolder.getAdapterPosition();
+            return mOnItemTouchCallbackListener.onMove(srcPosition, targetPosition);
         }
         return false;
     }
 
+    /**
+     * 当item被滑动删除后调用
+     *
+     * @param viewHolder 拖拽的
+     * @param direction  方向
+     */
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         if (mOnItemTouchCallbackListener != null) {
@@ -290,17 +281,16 @@ public class SwipeDragCallback extends ItemTouchHelper.Callback {
      *
      * @param onItemTouchCallbackListener OnItemTouchCallbackListener
      */
-    public void setOnItemTouchCallbackListener(OnItemTouchCallbackListener onItemTouchCallbackListener) {
+    public final void setOnItemTouchCallbackListener(OnItemTouchCallbackListener onItemTouchCallbackListener) {
         if (mOnItemTouchCallbackListener == null) {
             mOnItemTouchCallbackListener = onItemTouchCallbackListener;
         }
     }
 
-
-    private OnItemTouchCallbackListener mOnItemTouchCallbackListener = null;
-
+    /**
+     *
+     */
     public interface OnItemTouchCallbackListener {
-
         /**
          * 移动数据
          *

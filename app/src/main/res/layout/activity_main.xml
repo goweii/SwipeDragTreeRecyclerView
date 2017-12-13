@@ -9,170 +9,240 @@
     tools:context="com.goweii.swipedragtreerecyclerview.activity.MainActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="30dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:paddingBottom="10dp"
-                android:text="@string/numberPicker_dataCount" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="3dp">
 
-            <NumberPicker
-                android:id="@+id/numberPicker_dataCount"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:text="@string/numberPicker_dataCount" />
+
+                <NumberPicker
+                    android:id="@+id/numberPicker_dataCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="3dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:text="@string/radioGroup_layoutManager" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup_layoutManager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/radioGroup_layoutManager"
+                    android:orientation="vertical"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp">
+
+                    <RadioButton
+                        android:id="@+id/radioBtn_linear"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:text="@string/radioBtn_linear" />
+
+                    <RadioButton
+                        android:id="@+id/radioBtn_grid"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@string/radioBtn_grad" />
+
+                    <RadioButton
+                        android:id="@+id/radioBtn_staggered"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@string/radioBtn_staggered" />
+
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="3dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:text="@string/radioGroup_orientation" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup_orientation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/radioGroup_layoutManager"
+                    android:orientation="vertical"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp">
+
+                    <RadioButton
+                        android:id="@+id/radioBtn_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:text="@string/radioBtn_vertical" />
+
+                    <RadioButton
+                        android:id="@+id/radioBtn_horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@string/radioBtn_horizontal" />
+
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="3dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:text="@string/numberPicker_spanCount" />
+
+                <NumberPicker
+                    android:id="@+id/numberPicker_spanCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:id="@+id/ll_tree_set"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:paddingBottom="10dp"
-                android:text="@string/radioGroup_layoutManager" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="3dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:text="@string/numberPicker_levelCount" />
+
+                <NumberPicker
+                    android:id="@+id/numberPicker_levelCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="3dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:text="@string/numberPicker_subCount" />
+
+                <NumberPicker
+                    android:id="@+id/numberPicker_subCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <RadioGroup
-                android:id="@+id/radioGroup_layoutManager"
+                android:id="@+id/radioGroup_recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/radioGroup_layoutManager"
-                android:orientation="vertical"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp">
+                android:layout_height="0dp"
+                android:layout_above="@+id/btn_start"
+                android:layout_centerHorizontal="true"
+                android:layout_weight="1"
+                android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/radioBtn_linear"
-                    android:layout_width="match_parent"
+                    android:id="@+id/radioBtn_swipeDragRecyclerView"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:checked="true"
-                    android:text="@string/radioBtn_linear" />
+                    android:text="@string/radioBtn_swipeDragRecyclerView" />
 
                 <RadioButton
-                    android:id="@+id/radioBtn_grid"
-                    android:layout_width="match_parent"
+                    android:id="@+id/radioBtn_swipeDragTreeRecyclerView"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/radioBtn_grad" />
-
-                <RadioButton
-                    android:id="@+id/radioBtn_staggered"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/radioBtn_staggered" />
+                    android:text="@string/radioBtn_swipeDragTreeRecyclerView" />
 
             </RadioGroup>
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
+            <Button
+                android:id="@+id/btn_start"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:paddingBottom="10dp"
-                android:text="@string/radioGroup_orientation" />
-
-            <RadioGroup
-                android:id="@+id/radioGroup_orientation"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/radioGroup_layoutManager"
-                android:orientation="vertical"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp">
-
-                <RadioButton
-                    android:id="@+id/radioBtn_vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:checked="true"
-                    android:text="@string/radioBtn_vertical" />
-
-                <RadioButton
-                    android:id="@+id/radioBtn_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/radioBtn_horizontal" />
-
-            </RadioGroup>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:paddingBottom="10dp"
-                android:text="@string/numberPicker_spanCount" />
-
-            <NumberPicker
-                android:id="@+id/numberPicker_spanCount"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_weight="1"
+                android:text="@string/btn_start"
+                android:textAllCaps="false"
+                tools:layout_editor_absoluteX="86dp"
+                tools:layout_editor_absoluteY="16dp" />
         </LinearLayout>
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_start_DragSwipedRecyclerView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_start_TreeRecyclerView"
-        android:layout_centerHorizontal="true"
-        android:text="@string/btn_start_DragSwipedRecyclerView"
-        android:textAllCaps="false"
-        tools:layout_editor_absoluteX="86dp"
-        tools:layout_editor_absoluteY="16dp" />
-
-    <Button
-        android:id="@+id/btn_start_TreeRecyclerView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_start_DragSwipedTreeRecyclerView"
-        android:layout_centerHorizontal="true"
-        android:text="@string/btn_start_TreeRecyclerView"
-        android:textAllCaps="false"
-        tools:layout_editor_absoluteX="113dp"
-        tools:layout_editor_absoluteY="64dp" />
-
-    <Button
-        android:id="@+id/btn_start_DragSwipedTreeRecyclerView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/btn_start_DragSwipedTreeRecyclerView"
-        android:textAllCaps="false"
-        tools:layout_editor_absoluteX="69dp"
-        tools:layout_editor_absoluteY="112dp" />
 
 </RelativeLayout>

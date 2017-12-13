@@ -1,4 +1,4 @@
-package com.goweii.swipedragtreerecyclerviewlibrary.util;
+package com.goweii.swipedragtreerecyclerview.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -23,35 +23,29 @@ public class ToastUtil {
         sToast.show();
     }
 
-    @SuppressLint("ShowToast")
-    public static void show(Context context, int[] content){
-        StringBuilder sb = new StringBuilder("(");
-        for (int pos : content){
-            sb.append(pos).append(",");
-        }
-        sb.deleteCharAt(sb.length() - 1).append(")");
-        String s = sb.toString();
-        if (sToast == null){
-            sToast = Toast.makeText(context, s, Toast.LENGTH_SHORT);
-        } else {
-            sToast.setText(s);
-        }
-        sToast.show();
+    public static void show(Context context, String content, String prefix){
+        show(context, prefix + content);
     }
 
-    @SuppressLint("ShowToast")
+    public static void show(Context context, int content){
+        show(context, content, "");
+    }
+
+    public static void show(Context context, int content, String prefix){
+        show(context, prefix + content);
+    }
+
+    public static void show(Context context, int[] content){
+        show(context, content, "");
+    }
+
     public static void show(Context context, int[] content, String prefix){
         StringBuilder sb = new StringBuilder("(");
         for (int pos : content){
             sb.append(pos).append(",");
         }
         sb.deleteCharAt(sb.length() - 1).append(")");
-        String s = prefix + sb.toString();
-        if (sToast == null){
-            sToast = Toast.makeText(context, s, Toast.LENGTH_SHORT);
-        } else {
-            sToast.setText(s);
-        }
-        sToast.show();
+        sb.insert(0, prefix);
+        show(context, sb.toString());
     }
 }

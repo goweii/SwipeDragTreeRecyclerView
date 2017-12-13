@@ -18,7 +18,6 @@
         </activity>
         <activity android:name=".SwipeDragRecyclerViewActivity" />
         <activity android:name=".SwipeDragTreeRecyclerViewActivity" />
-        <activity android:name=".TreeRecyclerViewActivity"></activity>
     </application>
 
 </manifest>
