@@ -51,6 +51,9 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
     private int mOrientationType;
     private int mSpanCount;
     private int mDataCount;
+    public static boolean mItemLongClickEnable;
+    public static boolean mCustomViewDragEnable;
+    public static boolean mCustomLongClickEnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +65,9 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
         mOrientationType = intent.getIntExtra(MainActivity.OrientationType.NAME, MainActivity.OrientationType.VERTICAL);
         mSpanCount = intent.getIntExtra(MainActivity.SpanCount.NAME, MainActivity.SpanCount.DEFAULT);
         mDataCount = intent.getIntExtra(MainActivity.DataCount.NAME, MainActivity.DataCount.DEFAULT);
-
+        mItemLongClickEnable = intent.getBooleanExtra(MainActivity.Enable.ItemLongClickEnable, false);
+        mCustomLongClickEnable = intent.getBooleanExtra(MainActivity.Enable.CustomLongClickEnable, false);
+        mCustomViewDragEnable = intent.getBooleanExtra(MainActivity.Enable.CustomViewDragEnable, false);
         initData();
         initView();
         initSwipeDragFlag();
@@ -175,35 +180,35 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
         for (int i = 0; i < mRadioGroupCheckDragFlag.getChildCount(); i++) {
             mRadioGroupCheckDragFlag.getChildAt(i).setEnabled(false);
         }
-        if ((swipeFlag & TestBaseSwipeDragAdapter.TouchFlag.LEFT) != 0){
+        if ((swipeFlag & TestBaseSwipeDragAdapter.TouchFlag.LEFT) != 0) {
             mCheckBoxSwipeFlagLeft.setEnabled(true);
             mCheckBoxSwipeFlagLeft.setChecked(true);
         }
-        if ((swipeFlag & TestBaseSwipeDragAdapter.TouchFlag.RIGHT) != 0){
+        if ((swipeFlag & TestBaseSwipeDragAdapter.TouchFlag.RIGHT) != 0) {
             mCheckBoxSwipeFlagRight.setEnabled(true);
             mCheckBoxSwipeFlagRight.setChecked(true);
         }
-        if ((swipeFlag & TestBaseSwipeDragAdapter.TouchFlag.UP) != 0){
+        if ((swipeFlag & TestBaseSwipeDragAdapter.TouchFlag.UP) != 0) {
             mCheckBoxSwipeFlagUp.setEnabled(true);
             mCheckBoxSwipeFlagUp.setChecked(true);
         }
-        if ((swipeFlag & TestBaseSwipeDragAdapter.TouchFlag.DOWN) != 0){
+        if ((swipeFlag & TestBaseSwipeDragAdapter.TouchFlag.DOWN) != 0) {
             mCheckBoxSwipeFlagDown.setEnabled(true);
             mCheckBoxSwipeFlagDown.setChecked(true);
         }
-        if ((dragFlag & TestBaseSwipeDragAdapter.TouchFlag.LEFT) != 0){
+        if ((dragFlag & TestBaseSwipeDragAdapter.TouchFlag.LEFT) != 0) {
             mCheckBoxDragFlagLeft.setEnabled(true);
             mCheckBoxDragFlagLeft.setChecked(true);
         }
-        if ((dragFlag & TestBaseSwipeDragAdapter.TouchFlag.RIGHT) != 0){
+        if ((dragFlag & TestBaseSwipeDragAdapter.TouchFlag.RIGHT) != 0) {
             mCheckBoxDragFlagRight.setEnabled(true);
             mCheckBoxDragFlagRight.setChecked(true);
         }
-        if ((dragFlag & TestBaseSwipeDragAdapter.TouchFlag.UP) != 0){
+        if ((dragFlag & TestBaseSwipeDragAdapter.TouchFlag.UP) != 0) {
             mCheckBoxDragFlagUp.setEnabled(true);
             mCheckBoxDragFlagUp.setChecked(true);
         }
-        if ((dragFlag & TestBaseSwipeDragAdapter.TouchFlag.DOWN) != 0){
+        if ((dragFlag & TestBaseSwipeDragAdapter.TouchFlag.DOWN) != 0) {
             mCheckBoxDragFlagDown.setEnabled(true);
             mCheckBoxDragFlagDown.setChecked(true);
         }
@@ -273,32 +278,37 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
             }
         });
         mTestBaseSwipeDragAdapter.setSwipeBackgroundColorEnabled(true);
+        mTestBaseSwipeDragAdapter.setLongPressDragEnabled(true);
         mTestBaseSwipeDragAdapter.setOnItemViewClickListener(new BaseTypeAdapter.OnItemViewClickListener() {
             @Override
             public void onItemViewClick(View view, int position) {
                 ToastUtil.show(getApplicationContext(), position, "onItemViewClick");
             }
         });
-        mTestBaseSwipeDragAdapter.setOnItemViewLongClickListener(new BaseTypeAdapter.OnItemViewLongClickListener() {
-            @Override
-            public boolean onItemViewLongClick(View view, int position) {
-                ToastUtil.show(getApplicationContext(), position, "onItemViewLongClick");
-                return true;
-            }
-        });
-        mTestBaseSwipeDragAdapter.setOnCustomViewClickListener(new BaseTypeAdapter.OnCustomViewClickListener() {
-            @Override
-            public void onCustomViewClick(View view, int position) {
-                ToastUtil.show(getApplicationContext(), position, "onCustomViewClick");
-            }
-        });
-        mTestBaseSwipeDragAdapter.setOnCustomViewLongClickListener(new BaseTypeAdapter.OnCustomViewLongClickListener() {
-            @Override
-            public boolean onCustomViewLongClick(View view, int position) {
-                ToastUtil.show(getApplicationContext(), position, "onCustomViewLongClick");
-                return true;
-            }
-        });
+        if (mItemLongClickEnable) {
+            mTestBaseSwipeDragAdapter.setOnItemViewLongClickListener(new BaseTypeAdapter.OnItemViewLongClickListener() {
+                @Override
+                public boolean onItemViewLongClick(View view, int position) {
+                    ToastUtil.show(getApplicationContext(), position, "onItemViewLongClick");
+                    return true;
+                }
+            });
+        }
+        if (mCustomLongClickEnable) {
+            mTestBaseSwipeDragAdapter.setOnCustomViewClickListener(new BaseTypeAdapter.OnCustomViewClickListener() {
+                @Override
+                public void onCustomViewClick(View view, int position) {
+                    ToastUtil.show(getApplicationContext(), position, "onCustomViewClick");
+                }
+            });
+            mTestBaseSwipeDragAdapter.setOnCustomViewLongClickListener(new BaseTypeAdapter.OnCustomViewLongClickListener() {
+                @Override
+                public boolean onCustomViewLongClick(View view, int position) {
+                    ToastUtil.show(getApplicationContext(), position, "onCustomViewLongClick");
+                    return true;
+                }
+            });
+        }
     }
 
     private void initData() {
@@ -363,15 +373,17 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
     }
 
     private void disableRadioGroup(RadioGroup radioGroup) {
-        for (int i = 0; i < radioGroup.getChildCount(); i++) {
-            radioGroup.getChildAt(i).setEnabled(false);
-        }
+//        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+//            radioGroup.getChildAt(i).setEnabled(false);
+//        }
+        radioGroup.setVisibility(View.GONE);
     }
 
     private void enableRadioGroup(RadioGroup radioGroup) {
-        for (int i = 0; i < radioGroup.getChildCount(); i++) {
-            radioGroup.getChildAt(i).setEnabled(true);
-        }
+//        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+//            radioGroup.getChildAt(i).setEnabled(true);
+//        }
+        radioGroup.setVisibility(View.VISIBLE);
     }
 
     @Override

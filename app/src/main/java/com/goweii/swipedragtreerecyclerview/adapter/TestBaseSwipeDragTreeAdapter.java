@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.goweii.swipedragtreerecyclerview.activity.MainActivity;
 import com.goweii.swipedragtreerecyclerview.activity.R;
+import com.goweii.swipedragtreerecyclerview.activity.SwipeDragTreeRecyclerViewActivity;
 import com.goweii.swipedragtreerecyclerview.entity.TestTreeState;
 import com.goweii.swipedragtreerecyclerviewlibrary.adapter.BaseSwipeDragTreeAdapter;
 import com.goweii.swipedragtreerecyclerviewlibrary.entity.TypeData;
@@ -25,31 +26,39 @@ public class TestBaseSwipeDragTreeAdapter extends BaseSwipeDragTreeAdapter {
 
     @Override
     public void initIds() {
+        int[] clickFlags = new int[1];
+        if (SwipeDragTreeRecyclerViewActivity.mCustomLongClickEnable) {
+            clickFlags[0] = ClickFlag.BOTH;
+        } else {
+            clickFlags[0] = ClickFlag.CANNOT;
+        }
         putTypeLayoutViewIds(TestTreeState.TYPE_ONE, R.layout.item1_swipe_drag_tree_recycler_view,
-                new int[]{R.id.item1_sdtrv_tv}, null);
+                new int[]{R.id.item1_sdtrv_tv}, clickFlags);
         putTypeLayoutViewIds(TestTreeState.TYPE_TEO, R.layout.item2_swipe_drag_tree_recycler_view,
-                new int[]{R.id.item2_sdtrv_tv}, null);
+                new int[]{R.id.item2_sdtrv_tv}, clickFlags);
         putTypeLayoutViewIds(TestTreeState.TYPE_THREE, R.layout.item3_swipe_drag_tree_recycler_view,
-                new int[]{R.id.item3_sdtrv_tv}, null);
+                new int[]{R.id.item3_sdtrv_tv}, clickFlags);
         putTypeLayoutViewIds(TestTreeState.TYPE_FOUR, R.layout.item4_swipe_drag_tree_recycler_view,
-                new int[]{R.id.item4_sdtrv_tv}, null);
+                new int[]{R.id.item4_sdtrv_tv}, clickFlags);
         putTypeLayoutViewIds(TestTreeState.TYPE_LEAF, R.layout.item5_swipe_drag_tree_recycler_view,
-                new int[]{R.id.item5_sdtrv_tv}, null);
-        putTypeStartDragViewIds(TestTreeState.TYPE_ONE,
-                new int[]{R.id.item1_sdtrv_tv}, null);
-        putTypeStartDragViewIds(TestTreeState.TYPE_TEO,
-                new int[]{R.id.item2_sdtrv_tv}, null);
-        putTypeStartDragViewIds(TestTreeState.TYPE_THREE,
-                new int[]{R.id.item3_sdtrv_tv}, null);
-        putTypeStartDragViewIds(TestTreeState.TYPE_FOUR,
-                new int[]{R.id.item4_sdtrv_tv}, null);
-        putTypeStartDragViewIds(TestTreeState.TYPE_LEAF,
-                new int[]{R.id.item5_sdtrv_tv}, null);
+                new int[]{R.id.item5_sdtrv_tv}, clickFlags);
+        if (SwipeDragTreeRecyclerViewActivity.mCustomViewDragEnable) {
+            putTypeStartDragViewIds(TestTreeState.TYPE_ONE,
+                    new int[]{R.id.item1_sdtrv_tv}, null);
+            putTypeStartDragViewIds(TestTreeState.TYPE_TEO,
+                    new int[]{R.id.item2_sdtrv_tv}, null);
+            putTypeStartDragViewIds(TestTreeState.TYPE_THREE,
+                    new int[]{R.id.item3_sdtrv_tv}, null);
+            putTypeStartDragViewIds(TestTreeState.TYPE_FOUR,
+                    new int[]{R.id.item4_sdtrv_tv}, null);
+            putTypeStartDragViewIds(TestTreeState.TYPE_LEAF,
+                    new int[]{R.id.item5_sdtrv_tv}, null);
+        }
     }
 
     @Override
     protected SwipeDragTreeViewHolder creatHolder(View itemView, int viewType) {
-        if (mOrientationType == MainActivity.OrientationType.HORIZONTAL){
+        if (mOrientationType == MainActivity.OrientationType.HORIZONTAL) {
             ViewGroup.LayoutParams layoutParams = itemView.getLayoutParams();
             layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;

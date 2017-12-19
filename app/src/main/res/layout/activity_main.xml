@@ -17,7 +17,7 @@
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:orientation="horizontal"
             android:padding="10dp">
 
@@ -33,7 +33,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:paddingBottom="10dp"
-                    android:text="@string/numberPicker_dataCount" />
+                    android:text="@string/numberPicker_dataCount"
+                    android:textSize="12sp" />
 
                 <NumberPicker
                     android:id="@+id/numberPicker_dataCount"
@@ -53,7 +54,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:paddingBottom="10dp"
-                    android:text="@string/radioGroup_layoutManager" />
+                    android:text="@string/radioGroup_layoutManager"
+                    android:textSize="12sp" />
 
                 <RadioGroup
                     android:id="@+id/radioGroup_layoutManager"
@@ -70,21 +72,24 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:checked="true"
-                        android:text="@string/radioBtn_linear" />
+                        android:text="@string/radioBtn_linear"
+                        android:textSize="12sp" />
 
                     <RadioButton
                         android:id="@+id/radioBtn_grid"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="@string/radioBtn_grad" />
+                        android:text="@string/radioBtn_grad"
+                        android:textSize="12sp" />
 
                     <RadioButton
                         android:id="@+id/radioBtn_staggered"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="@string/radioBtn_staggered" />
+                        android:text="@string/radioBtn_staggered"
+                        android:textSize="12sp" />
 
                 </RadioGroup>
             </LinearLayout>
@@ -101,7 +106,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:paddingBottom="10dp"
-                    android:text="@string/radioGroup_orientation" />
+                    android:text="@string/radioGroup_orientation"
+                    android:textSize="12sp" />
 
                 <RadioGroup
                     android:id="@+id/radioGroup_orientation"
@@ -118,14 +124,16 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:checked="true"
-                        android:text="@string/radioBtn_vertical" />
+                        android:text="@string/radioBtn_vertical"
+                        android:textSize="12sp" />
 
                     <RadioButton
                         android:id="@+id/radioBtn_horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="@string/radioBtn_horizontal" />
+                        android:text="@string/radioBtn_horizontal"
+                        android:textSize="12sp" />
 
                 </RadioGroup>
             </LinearLayout>
@@ -142,7 +150,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:paddingBottom="10dp"
-                    android:text="@string/numberPicker_spanCount" />
+                    android:text="@string/numberPicker_spanCount"
+                    android:textSize="12sp" />
 
                 <NumberPicker
                     android:id="@+id/numberPicker_spanCount"
@@ -156,7 +165,7 @@
             android:id="@+id/ll_tree_set"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:orientation="horizontal"
             android:padding="10dp">
 
@@ -172,7 +181,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:paddingBottom="10dp"
-                    android:text="@string/numberPicker_levelCount" />
+                    android:text="@string/numberPicker_levelCount"
+                    android:textSize="12sp" />
 
                 <NumberPicker
                     android:id="@+id/numberPicker_levelCount"
@@ -192,7 +202,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:paddingBottom="10dp"
-                    android:text="@string/numberPicker_subCount1" />
+                    android:text="@string/numberPicker_subCount1"
+                    android:textSize="12sp" />
 
                 <NumberPicker
                     android:id="@+id/numberPicker_subCount1"
@@ -212,7 +223,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:paddingBottom="10dp"
-                    android:text="@string/numberPicker_subCount2" />
+                    android:text="@string/numberPicker_subCount2"
+                    android:textSize="12sp" />
 
                 <NumberPicker
                     android:id="@+id/numberPicker_subCount2"
@@ -232,7 +244,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:paddingBottom="10dp"
-                    android:text="@string/numberPicker_subCount3" />
+                    android:text="@string/numberPicker_subCount3"
+                    android:textSize="12sp" />
 
                 <NumberPicker
                     android:id="@+id/numberPicker_subCount3"
@@ -252,7 +265,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:paddingBottom="10dp"
-                    android:text="@string/numberPicker_subCount4" />
+                    android:text="@string/numberPicker_subCount4"
+                    android:textSize="12sp" />
 
                 <NumberPicker
                     android:id="@+id/numberPicker_subCount4"
@@ -265,9 +279,40 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:orientation="vertical"
             android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_open_close_item_long_click"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/btn_open_itemView_long_click"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/btn_open_close_custom_long_click"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/btn_open_customView_long_click"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/btn_open_close_custom_view_drag"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/btn_open_customView_drag"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
             <RadioGroup
                 android:id="@+id/radioGroup_recyclerView"
@@ -284,14 +329,16 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:checked="true"
-                    android:text="@string/radioBtn_swipeDragRecyclerView" />
+                    android:text="@string/radioBtn_swipeDragRecyclerView"
+                    android:textSize="12sp" />
 
                 <RadioButton
                     android:id="@+id/radioBtn_swipeDragTreeRecyclerView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/radioBtn_swipeDragTreeRecyclerView" />
+                    android:text="@string/radioBtn_swipeDragTreeRecyclerView"
+                    android:textSize="12sp" />
 
             </RadioGroup>
 
@@ -306,6 +353,7 @@
                 android:textAllCaps="false"
                 tools:layout_editor_absoluteX="86dp"
                 tools:layout_editor_absoluteY="16dp" />
+
         </LinearLayout>
 
     </LinearLayout>

@@ -190,7 +190,7 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
         mRecyclerView = recyclerView;
     }
 
-    private void openItemTouchHelper() {
+    private void bindItemTouchHelper() {
         mCallback = getNewCallback();
         mItemTouchHelper = new ItemTouchHelper(mCallback);
         mCallback.setItemViewSwipeEnabled(mItemViewSwipeEnabled);
@@ -205,8 +205,8 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
     }
 
     private void closeItemTouchHelper() {
-        mItemTouchHelper = null;
-        mCallback = null;
+//        mItemTouchHelper = null;
+//        mCallback = null;
     }
 
     /**
@@ -246,14 +246,10 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
      */
     public final void setItemViewSwipeEnabled(boolean itemViewSwipeEnabled) {
         mItemViewSwipeEnabled = itemViewSwipeEnabled;
-        if (!(mLongPressDragEnabled || mItemViewSwipeEnabled || mSwipeBackgroundColorEnabled)) {
-            closeItemTouchHelper();
+        if (mCallback == null) {
+            bindItemTouchHelper();
         } else {
-            if (mCallback == null) {
-                openItemTouchHelper();
-            } else {
-                mCallback.setItemViewSwipeEnabled(itemViewSwipeEnabled);
-            }
+            mCallback.setItemViewSwipeEnabled(mItemViewSwipeEnabled);
         }
     }
 
@@ -264,14 +260,10 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
      */
     public final void setLongPressDragEnabled(boolean longPressDragEnabled) {
         mLongPressDragEnabled = longPressDragEnabled;
-        if (!(mLongPressDragEnabled || mItemViewSwipeEnabled || mSwipeBackgroundColorEnabled)) {
-            closeItemTouchHelper();
+        if (mCallback == null) {
+            bindItemTouchHelper();
         } else {
-            if (mCallback == null) {
-                openItemTouchHelper();
-            } else {
-                mCallback.setLongPressDragEnabled(mLongPressDragEnabled);
-            }
+            mCallback.setLongPressDragEnabled(mLongPressDragEnabled);
         }
     }
 
@@ -282,14 +274,10 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
      */
     public final void setSwipeBackgroundColorEnabled(boolean swipeBackgroundColorEnabled) {
         mSwipeBackgroundColorEnabled = swipeBackgroundColorEnabled;
-        if (!(mLongPressDragEnabled || mItemViewSwipeEnabled || mSwipeBackgroundColorEnabled)) {
-            closeItemTouchHelper();
+        if (mCallback == null) {
+            bindItemTouchHelper();
         } else {
-            if (mCallback == null) {
-                openItemTouchHelper();
-            } else {
-                mCallback.setSwipeBackgroundColorEnabled(swipeBackgroundColorEnabled);
-            }
+            mCallback.setSwipeBackgroundColorEnabled(mSwipeBackgroundColorEnabled);
         }
     }
 
@@ -312,8 +300,10 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
      */
     public final void setSwipeBackgroundColor(@ColorInt int swipeBackgroundColor) {
         mSwipeBackgroundColor = swipeBackgroundColor;
-        if (mCallback != null) {
-            mCallback.setSwipeBackgroundColor(swipeBackgroundColor);
+        if (mCallback == null) {
+            bindItemTouchHelper();
+        } else {
+            mCallback.setSwipeBackgroundColor(mSwipeBackgroundColor);
         }
     }
 
@@ -324,8 +314,10 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
      */
     public final void setCustomSwipeFlag(int customSwipeFlag) {
         mCustomSwipeFlag = customSwipeFlag;
-        if (mCallback != null) {
-            mCallback.setCustomSwipeFlag(customSwipeFlag);
+        if (mCallback == null) {
+            bindItemTouchHelper();
+        } else {
+            mCallback.setCustomSwipeFlag(mCustomSwipeFlag);
         }
     }
 
@@ -336,8 +328,10 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
      */
     public final void setCustomDragFlag(int customDragFlag) {
         mCustomDragFlag = customDragFlag;
-        if (mCallback != null) {
-            mCallback.setCustomDragFlag(customDragFlag);
+        if (mCallback == null) {
+            bindItemTouchHelper();
+        } else {
+            mCallback.setCustomDragFlag(mCustomDragFlag);
         }
     }
 
@@ -355,7 +349,7 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
 
         @Override
         protected boolean itemViewOnLongClick(View v, int position) {
-            final boolean dragEnable = mCallback.isLongPressDragEnabled();
+            final boolean dragEnable = isLongPressDragEnabled();
             setLongPressDragEnabled(false);
             boolean longClick = mOnItemViewLongClickListener.onItemViewLongClick(v, position);
             setLongPressDragEnabledLater(dragEnable);

@@ -30,6 +30,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private NumberPicker mNumberPickerSubCount2;
     private NumberPicker mNumberPickerSubCount3;
     private NumberPicker mNumberPickerSubCount4;
+    private Button mBtnOpenCloseItemLongClick;
+    private Button mBtnOpenCloseCustomLongClick;
+    private Button mBtnOpenCloseCustomViewDrag;
+    private boolean mItemLongClickEnable = false;
+    private boolean mCustomLongClickEnable = false;
+    private boolean mCustomViewDragEnable = false;
+
+
+    static class Enable {
+        static final String ItemLongClickEnable = "ItemLongClickEnable";
+        static final String CustomLongClickEnable = "CustomLongClickEnable";
+        static final String CustomViewDragEnable = "CustomViewDragEnable";
+    }
 
     static class RecyclerViewType {
         static final String NAME = "RecyclerViewType";
@@ -126,6 +139,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mNumberPickerSubCount4.setOnValueChangedListener(this);
         mNumberPickerSubCount4.setMinValue(1);
         mNumberPickerSubCount4.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        mBtnOpenCloseItemLongClick = findViewById(R.id.btn_open_close_item_long_click);
+        mBtnOpenCloseItemLongClick.setOnClickListener(this);
+        mBtnOpenCloseCustomViewDrag = findViewById(R.id.btn_open_close_custom_view_drag);
+        mBtnOpenCloseCustomViewDrag.setOnClickListener(this);
+        mBtnOpenCloseCustomLongClick = findViewById(R.id.btn_open_close_custom_long_click);
+        mBtnOpenCloseCustomLongClick.setOnClickListener(this);
     }
 
     @Override
@@ -202,8 +221,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_start:
                 startActivity();
                 break;
+            case R.id.btn_open_close_item_long_click:
+                changeItemLongClickEnable();
+                break;
+            case R.id.btn_open_close_custom_view_drag:
+                changeCustomViewDragEnable();
+                break;
+            case R.id.btn_open_close_custom_long_click:
+                changeCustomLongClickEnable();
+                break;
             default:
                 break;
+        }
+    }
+
+    private void changeCustomLongClickEnable() {
+        mCustomLongClickEnable = !mCustomLongClickEnable;
+        if (mCustomLongClickEnable) {
+            mBtnOpenCloseCustomLongClick.setText(R.string.btn_close_customView_long_click);
+        } else {
+            mBtnOpenCloseCustomLongClick.setText(R.string.btn_open_customView_long_click);
+        }
+    }
+
+    private void changeCustomViewDragEnable() {
+        mCustomViewDragEnable = !mCustomViewDragEnable;
+        if (mCustomViewDragEnable) {
+            mBtnOpenCloseCustomViewDrag.setText(R.string.btn_close_customView_drag);
+        } else {
+            mBtnOpenCloseCustomViewDrag.setText(R.string.btn_open_customView_drag);
+        }
+    }
+
+    private void changeItemLongClickEnable() {
+        mItemLongClickEnable = !mItemLongClickEnable;
+        if (mItemLongClickEnable) {
+            mBtnOpenCloseItemLongClick.setText(R.string.btn_close_itemView_long_click);
+        } else {
+            mBtnOpenCloseItemLongClick.setText(R.string.btn_open_itemView_long_click);
         }
     }
 
@@ -216,6 +271,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra(OrientationType.NAME, mOrientationType);
                 intent.putExtra(SpanCount.NAME, mSpanCount);
                 intent.putExtra(DataCount.NAME, mDataCount);
+                intent.putExtra(Enable.ItemLongClickEnable, mItemLongClickEnable);
+                intent.putExtra(Enable.CustomLongClickEnable, mCustomLongClickEnable);
+                intent.putExtra(Enable.CustomViewDragEnable, mCustomViewDragEnable);
                 startActivity(intent);
                 break;
             case RecyclerViewType.SWIP_DARG_TREE:
@@ -224,10 +282,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra(OrientationType.NAME, mOrientationType);
                 intent.putExtra(SpanCount.NAME, mSpanCount);
                 intent.putExtra(DataCount.NAME, mDataCount);
-                for (int i = mLevelCount - 1; i < mSubCount.length; i ++){
+                for (int i = mLevelCount - 1; i < mSubCount.length; i++) {
                     mSubCount[i] = 0;
                 }
                 intent.putExtra(SubCount.NAME, mSubCount);
+                intent.putExtra(Enable.ItemLongClickEnable, mItemLongClickEnable);
+                intent.putExtra(Enable.CustomLongClickEnable, mCustomLongClickEnable);
+                intent.putExtra(Enable.CustomViewDragEnable, mCustomViewDragEnable);
                 startActivity(intent);
                 break;
             default:

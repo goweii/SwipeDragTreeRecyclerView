@@ -57,6 +57,9 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
     private ArrayList<TreeData> mDatas = null;
     private RecyclerView mSwipeDragTreeRecyclerView;
     private TestBaseSwipeDragTreeAdapter mTestBaseSwipeDragTreeAdapter;
+    public static boolean mItemLongClickEnable;
+    public static  boolean mCustomViewDragEnable;
+    public static  boolean mCustomLongClickEnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,9 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
         mSpanCount = intent.getIntExtra(MainActivity.SpanCount.NAME, MainActivity.SpanCount.DEFAULT);
         mDataCount = intent.getIntExtra(MainActivity.DataCount.NAME, MainActivity.DataCount.DEFAULT);
         mSubCount = intent.getIntArrayExtra(MainActivity.SubCount.NAME);
+        mItemLongClickEnable = intent.getBooleanExtra(MainActivity.Enable.ItemLongClickEnable, false);
+        mCustomLongClickEnable = intent.getBooleanExtra(MainActivity.Enable.CustomLongClickEnable, false);
+        mCustomViewDragEnable = intent.getBooleanExtra(MainActivity.Enable.CustomViewDragEnable, false);
 
         initData();
         initView();
@@ -241,6 +247,7 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
             }
         });
         mTestBaseSwipeDragTreeAdapter.setSwipeBackgroundColorEnabled(true);
+        mTestBaseSwipeDragTreeAdapter.setLongPressDragEnabled(true);
         mTestBaseSwipeDragTreeAdapter.setMemoryExpandState(true);
 
         mTestBaseSwipeDragTreeAdapter.setOnItemViewClickListener(new BaseSwipeDragAdapter.OnItemViewClickListener() {
@@ -250,29 +257,33 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
                 ToastUtil.show(getApplicationContext(), positions, "onItemViewClick");
             }
         });
-        mTestBaseSwipeDragTreeAdapter.setOnItemViewLongClickListener(new BaseTypeAdapter.OnItemViewLongClickListener() {
-            @Override
-            public boolean onItemViewLongClick(View view, int position) {
-                int[] positions = mTestBaseSwipeDragTreeAdapter.getPositions(position);
-                ToastUtil.show(getApplicationContext(), positions, "onItemViewLongClick");
-                return true;
-            }
-        });
-        mTestBaseSwipeDragTreeAdapter.setOnCustomViewClickListener(new BaseSwipeDragAdapter.OnCustomViewClickListener() {
-            @Override
-            public void onCustomViewClick(View view, int position) {
-                int[] positions = mTestBaseSwipeDragTreeAdapter.getPositions(position);
-                ToastUtil.show(getApplicationContext(), positions, "onCustomViewClick");
-            }
-        });
-        mTestBaseSwipeDragTreeAdapter.setOnCustomViewLongClickListener(new BaseTypeAdapter.OnCustomViewLongClickListener() {
-            @Override
-            public boolean onCustomViewLongClick(View view, int position) {
-                int[] positions = mTestBaseSwipeDragTreeAdapter.getPositions(position);
-                ToastUtil.show(getApplicationContext(), positions, "onCustomViewLongClick");
-                return true;
-            }
-        });
+        if (mItemLongClickEnable) {
+            mTestBaseSwipeDragTreeAdapter.setOnItemViewLongClickListener(new BaseTypeAdapter.OnItemViewLongClickListener() {
+                @Override
+                public boolean onItemViewLongClick(View view, int position) {
+                    int[] positions = mTestBaseSwipeDragTreeAdapter.getPositions(position);
+                    ToastUtil.show(getApplicationContext(), positions, "onItemViewLongClick");
+                    return true;
+                }
+            });
+        }
+        if (mCustomLongClickEnable) {
+            mTestBaseSwipeDragTreeAdapter.setOnCustomViewClickListener(new BaseSwipeDragAdapter.OnCustomViewClickListener() {
+                @Override
+                public void onCustomViewClick(View view, int position) {
+                    int[] positions = mTestBaseSwipeDragTreeAdapter.getPositions(position);
+                    ToastUtil.show(getApplicationContext(), positions, "onCustomViewClick");
+                }
+            });
+            mTestBaseSwipeDragTreeAdapter.setOnCustomViewLongClickListener(new BaseTypeAdapter.OnCustomViewLongClickListener() {
+                @Override
+                public boolean onCustomViewLongClick(View view, int position) {
+                    int[] positions = mTestBaseSwipeDragTreeAdapter.getPositions(position);
+                    ToastUtil.show(getApplicationContext(), positions, "onCustomViewLongClick");
+                    return true;
+                }
+            });
+        }
         mTestBaseSwipeDragTreeAdapter.setOnExpandChangeListener(new BaseSwipeDragTreeAdapter.OnExpandChangeListener() {
             @Override
             public void onExpand(int itemCount) {
@@ -465,15 +476,17 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
 
 
     private void disableRadioGroup(RadioGroup radioGroup) {
-        for (int i = 0; i < radioGroup.getChildCount(); i++) {
-            radioGroup.getChildAt(i).setEnabled(false);
-        }
+//        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+//            radioGroup.getChildAt(i).setEnabled(false);
+//        }
+        radioGroup.setVisibility(View.GONE);
     }
 
     private void enableRadioGroup(RadioGroup radioGroup) {
-        for (int i = 0; i < radioGroup.getChildCount(); i++) {
-            radioGroup.getChildAt(i).setEnabled(true);
-        }
+//        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+//            radioGroup.getChildAt(i).setEnabled(true);
+//        }
+        radioGroup.setVisibility(View.VISIBLE);
     }
 
     @Override
