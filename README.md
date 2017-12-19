@@ -11,7 +11,12 @@
  - **展开关闭全部分组**
 
 ## **下载**
+<<<<<<< HEAD
  - Demo：[下载][2]
+=======
+ - Demo：暂未提供下载
+
+>>>>>>> origin/master
 ## **截图**
 <img src="screenshot/SwipeDragTreeRecyclerView_1.gif" width="270" height="480"/>
 
@@ -208,8 +213,12 @@ public class TestBaseSwipeDragTreeAdapter extends BaseSwipeDragTreeAdapter {
 
 ## 注意
 
+<<<<<<< HEAD
  - 发现 bug 请联系 QQ302833254
 
 
   [1]: https://github.com/goweii/SwipeDragTreeRecyclerView
   [2]: https://github.com/goweii/SwipeDragTreeRecyclerView/blob/master/app/debug/SwipeDragTreeRecyclerView_debug_v1.0.0.apk
+=======
+ - 发现 bug 请联系 QQ302833254
+>>>>>>> origin/master
