@@ -1,6 +1,6 @@
 # SwipeDragTreeRecyclerView 使用说明
 
-[GitHup 主页](https://github.com/goweii/SwipeDragTreeRecyclerView)
+[GitHub 主页](https://github.com/goweii/SwipeDragTreeRecyclerView)
 
 ##  **功能**
  - **树形结构 RecyclerView**
