@@ -3,6 +3,12 @@
     <string name="radioBtn_swipeDragRecyclerView">SwipeDragRecyclerView</string>
     <string name="radioBtn_swipeDragTreeRecyclerView">SwipeDragTreeRecyclerView</string>
     <string name="btn_start">Start</string>
+    <string name="btn_open_itemView_long_click">open item long click</string>
+    <string name="btn_close_itemView_long_click">close item long click</string>
+    <string name="btn_open_customView_long_click">open custom long click</string>
+    <string name="btn_close_customView_long_click">close custom long click</string>
+    <string name="btn_open_customView_drag">open drag view</string>
+    <string name="btn_close_customView_drag">close drag view</string>
 
     <string name="btn_open_swipe">open swipe</string>
     <string name="btn_close_swipe">close swipe</string>
