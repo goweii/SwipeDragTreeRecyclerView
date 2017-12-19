@@ -1,5 +1,6 @@
 # SwipeDragTreeRecyclerView 使用说明
-[GitHup 主页][1]
+
+[GitHup 主页](https://github.com/goweii/SwipeDragTreeRecyclerView)
 
 ##  **功能**
  - **树形结构 RecyclerView**
@@ -11,12 +12,9 @@
  - **展开关闭全部分组**
 
 ## **下载**
-<<<<<<< HEAD
- - Demo：[下载][2]
-=======
- - Demo：暂未提供下载
 
->>>>>>> origin/master
+ - Demo：[下载](https://github.com/goweii/SwipeDragTreeRecyclerView/blob/master/app/debug/SwipeDragTreeRecyclerView_debug_v1.0.0.apk)
+
 ## **截图**
 <img src="screenshot/SwipeDragTreeRecyclerView_1.gif" width="270" height="480"/>
 
@@ -68,7 +66,7 @@ public class TestTreeState extends TreeState {
 		在这个方法中你应该调用下面2个方法完成相关初始化
 		 - **putTypeLayoutViewIds(int viewType, int layoutId, int[] viewIds, int[] clickFlags)**
 			这4个参数的含义为：
-			 - viewType  
+			 - viewType
                 类别 继承 TreeState 增加的静态变量
 			 - layoutId
 			    布局id
@@ -213,12 +211,5 @@ public class TestBaseSwipeDragTreeAdapter extends BaseSwipeDragTreeAdapter {
 
 ## 注意
 
-<<<<<<< HEAD
  - 发现 bug 请联系 QQ302833254
 
-
-  [1]: https://github.com/goweii/SwipeDragTreeRecyclerView
-  [2]: https://github.com/goweii/SwipeDragTreeRecyclerView/blob/master/app/debug/SwipeDragTreeRecyclerView_debug_v1.0.0.apk
-=======
- - 发现 bug 请联系 QQ302833254
->>>>>>> origin/master
