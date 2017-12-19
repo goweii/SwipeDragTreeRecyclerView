@@ -12,7 +12,7 @@
 暂时未提供
 
 ### **截图**
-![enter description here][1]
+<img src="screenshot/SwipeDragTreeRecyclerView_1.gif" width="270" height="480"/>
 
 ### **使用方法**
 [![](https://jitpack.io/v/goweii/SwipeDragTreeRecyclerView.svg)](https://jitpack.io/#goweii/SwipeDragTreeRecyclerView)
@@ -201,6 +201,3 @@ public class TestBaseSwipeDragTreeAdapter extends BaseSwipeDragTreeAdapter {
 	设置 item 子 view 点击监听器，需要在适配器的 initIds() 方法中开启
  - #### **setOnCustomViewLongClickListener(OnCustomViewLongClickListener onCustomViewLongClickListener)**
 	设置 item 子 view 长按监听器，需要在适配器的 initIds() 方法中开启
-
-
-  [1]: ./images/SwipeDragTreeRecyclerView_1.gif "SwipeDragTreeRecyclerView_1"
