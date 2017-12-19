@@ -16,8 +16,6 @@ import java.util.Collections;
  * @date 2017/11/23
  */
 public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
-    private ArrayList<TreeData> mDatas = null;
-    private ArrayList<TreeState> mStates = null;
     private boolean mMemoryExpandState = false;
 
     private OnExpandChangeListener mOnExpandChangeListener = null;
@@ -27,58 +25,30 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
     }
 
     /**
-     * 初始化 {@link #mDatas} 数据
-     */
-    @Override
-    protected void initDatas(ArrayList datas) {
-        mDatas = datas;
-    }
-
-    /**
      * 初始化 {@link #mStates} 数据
      */
     @Override
     protected void initStates() {
-        if (mStates == null) {
-            mStates = new ArrayList<>();
-        }
-        for (int i = 0; i < getDatasSize(); i++) {
+        ArrayList<TreeState> states = new ArrayList<>();
+        for (int i = 0; i < getDatas().size(); i++) {
             TreeState state = new TreeState();
-            state.setType(getDatas().get(i).getType());
+            TreeData data = (TreeData) getDatas().get(i);
+            state.setType(data.getType());
             state.setPositions(new int[]{i});
             state.setExpand(false);
-            mStates.add(state);
+            states.add(state);
         }
-    }
-
-    @Override
-    protected ArrayList<TreeData> getDatas() {
-        return mDatas;
-    }
-
-    @Override
-    protected ArrayList<TreeState> getStates() {
-        return mStates;
-    }
-
-    @Override
-    protected int getDatasSize() {
-        return mDatas == null ? 0 : mDatas.size();
-    }
-
-    @Override
-    protected int getStatesSize() {
-        return mStates == null ? 0 : mStates.size();
+        setStates(states);
     }
 
     @Override
     protected TreeData getData(int position) {
         int[] positions = getState(position).getPositions();
         TreeData data = null;
-        ArrayList<TreeData> datas = getDatas();
+        ArrayList datas = getDatas();
         for (int pos : positions) {
             if (datas.size() > pos) {
-                data = datas.get(pos);
+                data = (TreeData) datas.get(pos);
                 if (!data.isLeaf()) {
                     datas = data.getList();
                 } else {
@@ -93,7 +63,7 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
 
     @Override
     protected TreeState getState(int position) {
-        return mStates.get(position);
+        return (TreeState) super.getState(position);
     }
 
     /**
@@ -110,7 +80,7 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
         }
         int lastIndex = positions.length - 1;
         int count = 0;
-        for (int i = position + 1; i < getStatesSize(); i++) {
+        for (int i = position + 1; i < getStates().size(); i++) {
             int[] tempPositions = getState(i).getPositions();
             if (tempPositions.length >= positions.length) {
                 tempPositions[lastIndex]--;
@@ -261,7 +231,7 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
      */
     public final boolean isAllExpand() {
         boolean isAllExpand = true;
-        for (int i = 0; i < getStatesSize(); i++) {
+        for (int i = 0; i < getStates().size(); i++) {
             if (!getData(i).isLeaf() && !getState(i).isExpand()) {
                 isAllExpand = false;
                 break;
@@ -274,18 +244,19 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
      * 展开所有分组
      */
     public final void expandAll() {
-        for (int i = 0; i < getStatesSize(); i++) {
+        for (int i = 0; i < getStates().size(); i++) {
             if (!getData(i).isLeaf() && !getState(i).isExpand()) {
                 openGroup(i, i);
             }
         }
+        notifyDataSetChanged();
     }
 
     /**
      * 关闭所有分组
      */
     public final void unExpandAll() {
-        for (int i = 0; i < getStatesSize(); i++) {
+        for (int i = 0; i < getStates().size(); i++) {
             if (!getData(i).isLeaf() && getState(i).isExpand()) {
                 closeGroup(i, i);
             }

@@ -30,8 +30,11 @@
     <string name="checkBox_up">up</string>
     <string name="checkBox_down">down</string>
 
-    <string name="numberPicker_dataCount">dataCount</string>
-    <string name="numberPicker_spanCount">spanCount</string>
-    <string name="numberPicker_levelCount">levelCount</string>
-    <string name="numberPicker_subCount">subCount</string>
+    <string name="numberPicker_dataCount">data</string>
+    <string name="numberPicker_spanCount">span</string>
+    <string name="numberPicker_levelCount">level</string>
+    <string name="numberPicker_subCount1">sub1</string>
+    <string name="numberPicker_subCount2">sub2</string>
+    <string name="numberPicker_subCount3">sub3</string>
+    <string name="numberPicker_subCount4">sub4</string>
 </resources>

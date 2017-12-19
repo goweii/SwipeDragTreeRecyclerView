@@ -259,17 +259,19 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
         mTestBaseSwipeDragAdapter = new TestBaseSwipeDragAdapter(mOrientationType);
         mDragSwipedRecyclerView.setAdapter(mTestBaseSwipeDragAdapter);
         mTestBaseSwipeDragAdapter.init(mDatas);
-        mTestBaseSwipeDragAdapter.setOnItemTouchCallbackListener(new SwipeDragCallback.OnItemTouchCallbackListener() {
+        mTestBaseSwipeDragAdapter.setOnItemSwipeListener(new SwipeDragCallback.OnItemSwipeListener() {
+            @Override
+            public void onSwipe(int position) {
+                mTestBaseSwipeDragAdapter.notifyItemSwipe(position);
+            }
+        });
+        mTestBaseSwipeDragAdapter.setOnItemDragListener(new SwipeDragCallback.OnItemDragListener() {
             @Override
             public boolean onMove(int fromPosition, int toPosition) {
                 mTestBaseSwipeDragAdapter.notifyItemDrag(fromPosition, toPosition);
                 return true;
             }
-            @Override
-            public void onSwiped(int position) {
-                mTestBaseSwipeDragAdapter.notifyItemSwiped(position);
-            }
-        }).attachToRecyclerView(mDragSwipedRecyclerView);
+        });
         mTestBaseSwipeDragAdapter.setSwipeBackgroundColorEnabled(true);
         mTestBaseSwipeDragAdapter.setOnItemViewClickListener(new BaseTypeAdapter.OnItemViewClickListener() {
             @Override

@@ -1,7 +1,6 @@
 package com.goweii.swipedragtreerecyclerviewlibrary.entity;
 
 import com.goweii.swipedragtreerecyclerviewlibrary.entity.interfaces.ISelected;
-import com.goweii.swipedragtreerecyclerviewlibrary.entity.interfaces.IState;
 import com.goweii.swipedragtreerecyclerviewlibrary.entity.interfaces.IType;
 
 /**
@@ -17,7 +16,7 @@ import com.goweii.swipedragtreerecyclerviewlibrary.entity.interfaces.IType;
  * @date 2017/11/23
  */
 
-public class TypeState implements IState, ISelected, IType {
+public class TypeState implements ISelected, IType {
     public static final int TYPE_LEAF = 0;
 
     private int mType = TYPE_LEAF;

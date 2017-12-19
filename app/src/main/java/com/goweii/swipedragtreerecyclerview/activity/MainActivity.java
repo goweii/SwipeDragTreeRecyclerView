@@ -9,6 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RadioGroup;
 
+import com.goweii.swipedragtreerecyclerviewlibrary.util.LogUtil;
+
 /**
  * @author cuizhen
  */
@@ -20,11 +22,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int mSpanCount = SpanCount.DEFAULT;
     private int mDataCount = DataCount.DEFAULT;
     private int mLevelCount = LevelCount.DEFAULT;
-    private int mSubCount = LevelCount.DEFAULT;
+    private int[] mSubCount = new int[]{SubCount.DEFAULT, SubCount.DEFAULT, SubCount.DEFAULT, SubCount.DEFAULT};
     private NumberPicker mNumberPickerSpanCount;
     private LinearLayout mLlTreeSet;
     private NumberPicker mNumberPickerLevelCount;
-    private NumberPicker mNumberPickerSubCount;
+    private NumberPicker mNumberPickerSubCount1;
+    private NumberPicker mNumberPickerSubCount2;
+    private NumberPicker mNumberPickerSubCount3;
+    private NumberPicker mNumberPickerSubCount4;
 
     static class RecyclerViewType {
         static final String NAME = "RecyclerViewType";
@@ -84,31 +89,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         radioGroupRecyclerView.setOnCheckedChangeListener(this);
 
         mNumberPickerSpanCount = findViewById(R.id.numberPicker_spanCount);
+        mNumberPickerSpanCount.setOnValueChangedListener(this);
         mNumberPickerSpanCount.setEnabled(false);
         mNumberPickerSpanCount.setMinValue(1);
         mNumberPickerSpanCount.setMaxValue(20);
         mNumberPickerSpanCount.setValue(SpanCount.DEFAULT);
         mNumberPickerSpanCount.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-        mNumberPickerSpanCount.setOnValueChangedListener(this);
         NumberPicker numberPickerDataCount = findViewById(R.id.numberPicker_dataCount);
+        numberPickerDataCount.setOnValueChangedListener(this);
         numberPickerDataCount.setMinValue(0);
         numberPickerDataCount.setMaxValue(100);
         numberPickerDataCount.setValue(DataCount.DEFAULT);
         numberPickerDataCount.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-        numberPickerDataCount.setOnValueChangedListener(this);
         mNumberPickerLevelCount = findViewById(R.id.numberPicker_levelCount);
+        mNumberPickerLevelCount.setOnValueChangedListener(this);
         mNumberPickerLevelCount.setMinValue(1);
         mNumberPickerLevelCount.setMaxValue(5);
         mNumberPickerLevelCount.setValue(LevelCount.DEFAULT);
         mNumberPickerLevelCount.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-        mNumberPickerSubCount = findViewById(R.id.numberPicker_subCount);
-        mNumberPickerSubCount.setMinValue(1);
-        mNumberPickerSubCount.setMaxValue(10);
-        mNumberPickerSubCount.setValue(5);
-        mNumberPickerSubCount.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
         mLlTreeSet = findViewById(R.id.ll_tree_set);
         mLlTreeSet.setVisibility(View.INVISIBLE);
+        mNumberPickerSubCount1 = findViewById(R.id.numberPicker_subCount1);
+        mNumberPickerSubCount1.setOnValueChangedListener(this);
+        mNumberPickerSubCount1.setMinValue(1);
+        mNumberPickerSubCount1.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        mNumberPickerSubCount2 = findViewById(R.id.numberPicker_subCount2);
+        mNumberPickerSubCount2.setOnValueChangedListener(this);
+        mNumberPickerSubCount2.setMinValue(1);
+        mNumberPickerSubCount2.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        mNumberPickerSubCount3 = findViewById(R.id.numberPicker_subCount3);
+        mNumberPickerSubCount3.setOnValueChangedListener(this);
+        mNumberPickerSubCount3.setMinValue(1);
+        mNumberPickerSubCount3.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        mNumberPickerSubCount4 = findViewById(R.id.numberPicker_subCount4);
+        mNumberPickerSubCount4.setOnValueChangedListener(this);
+        mNumberPickerSubCount4.setMinValue(1);
+        mNumberPickerSubCount4.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
     }
 
     @Override
@@ -116,19 +133,67 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (picker.getId()) {
             case R.id.numberPicker_dataCount:
                 mDataCount = newVal;
+                setSubNumberPickerCount();
                 break;
             case R.id.numberPicker_spanCount:
                 mSpanCount = newVal;
                 break;
             case R.id.numberPicker_levelCount:
                 mLevelCount = newVal;
+                setSubNumberPickerEnabled();
+                setSubNumberPickerCount();
                 break;
-            case R.id.numberPicker_subCount:
-                mSubCount = newVal;
+            case R.id.numberPicker_subCount1:
+                mSubCount[0] = newVal;
+                break;
+            case R.id.numberPicker_subCount2:
+                mSubCount[1] = newVal;
+                break;
+            case R.id.numberPicker_subCount3:
+                mSubCount[2] = newVal;
+                break;
+            case R.id.numberPicker_subCount4:
+                mSubCount[3] = newVal;
                 break;
             default:
                 break;
         }
+    }
+
+    private void setSubNumberPickerCount() {
+        int max = getSubCount(mDataCount, mLevelCount);
+        int value = (int) Math.floor((max + 1) / 2);
+        if (mLevelCount >= 2) {
+            mNumberPickerSubCount1.setMaxValue(max);
+            mNumberPickerSubCount1.setValue(value);
+            mSubCount[0] = value;
+        }
+        if (mLevelCount >= 3) {
+            mNumberPickerSubCount2.setMaxValue(max);
+            mNumberPickerSubCount2.setValue(value);
+            mSubCount[1] = value;
+        }
+        if (mLevelCount >= 4) {
+            mNumberPickerSubCount3.setMaxValue(max);
+            mNumberPickerSubCount3.setValue(value);
+            mSubCount[2] = value;
+        }
+        if (mLevelCount >= 5) {
+            mNumberPickerSubCount4.setMaxValue(max);
+            mNumberPickerSubCount4.setValue(value);
+            mSubCount[3] = value;
+        }
+    }
+
+    private void setSubNumberPickerEnabled() {
+        mNumberPickerSubCount1.setEnabled(false);
+        mNumberPickerSubCount2.setEnabled(false);
+        mNumberPickerSubCount3.setEnabled(false);
+        mNumberPickerSubCount4.setEnabled(false);
+        if (mLevelCount >= 2) mNumberPickerSubCount1.setEnabled(true);
+        if (mLevelCount >= 3) mNumberPickerSubCount2.setEnabled(true);
+        if (mLevelCount >= 4) mNumberPickerSubCount3.setEnabled(true);
+        if (mLevelCount >= 5) mNumberPickerSubCount4.setEnabled(true);
     }
 
     @Override
@@ -159,8 +224,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra(OrientationType.NAME, mOrientationType);
                 intent.putExtra(SpanCount.NAME, mSpanCount);
                 intent.putExtra(DataCount.NAME, mDataCount);
-                intent.putExtra(LevelCount.NAME, mLevelCount);
-                intent.putExtra(SpanCount.NAME, mSubCount);
+                for (int i = mLevelCount - 1; i < mSubCount.length; i ++){
+                    mSubCount[i] = 0;
+                }
+                intent.putExtra(SubCount.NAME, mSubCount);
                 startActivity(intent);
                 break;
             default:
@@ -210,6 +277,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case R.id.radioBtn_swipeDragTreeRecyclerView:
                         mRecyclerViewType = RecyclerViewType.SWIP_DARG_TREE;
                         mLlTreeSet.setVisibility(View.VISIBLE);
+                        setSubNumberPickerEnabled();
+                        setSubNumberPickerCount();
                         break;
                     default:
                         break;
@@ -218,5 +287,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             default:
                 break;
         }
+    }
+
+    private final int count = 10000;
+
+    private int getSubCount(int data, int level) {
+        if (level == 1) {
+            return 0;
+        }
+        int[] sub = new int[4];
+        for (int i = 0; i < sub.length; i++) {
+            if (i < level - 1) {
+                sub[i] = 1;
+            } else {
+                sub[i] = 0;
+            }
+        }
+        while (true) {
+            int num = data * (1 + sub[0] * (1 + sub[1] * (1 + sub[2] * (1 + sub[3]))));
+            if (sub[0] > 100) {
+                break;
+            }
+            if (count < num) {
+                break;
+            }
+            for (int i = 0; i < level - 1; i++) {
+                sub[i]++;
+            }
+        }
+        LogUtil.d("---count-->", data * (1 + sub[0] * (1 + sub[1] * (1 + sub[2] * (1 + sub[3])))));
+        return sub[0];
     }
 }

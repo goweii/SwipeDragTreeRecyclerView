@@ -24,7 +24,8 @@ public class SwipeDragCallback extends ItemTouchHelper.Callback {
     private int mCustomSwipeFlag = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
     private int mCustomDragFlag = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
 
-    private OnItemTouchCallbackListener mOnItemTouchCallbackListener = null;
+    private OnItemDragListener mOnItemDragListener = null;
+    private OnItemSwipeListener mOnItemSwipeListener = null;
 
     public SwipeDragCallback() {
     }
@@ -255,10 +256,10 @@ public class SwipeDragCallback extends ItemTouchHelper.Callback {
      */
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder srcViewHolder, RecyclerView.ViewHolder targetViewHolder) {
-        if (mOnItemTouchCallbackListener != null) {
+        if (mOnItemDragListener != null) {
             int srcPosition = srcViewHolder.getAdapterPosition();
             int targetPosition = targetViewHolder.getAdapterPosition();
-            return mOnItemTouchCallbackListener.onMove(srcPosition, targetPosition);
+            return mOnItemDragListener.onMove(srcPosition, targetPosition);
         }
         return false;
     }
@@ -271,26 +272,43 @@ public class SwipeDragCallback extends ItemTouchHelper.Callback {
      */
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        if (mOnItemTouchCallbackListener != null) {
-            mOnItemTouchCallbackListener.onSwiped(viewHolder.getAdapterPosition());
+        if (mOnItemSwipeListener != null) {
+            mOnItemSwipeListener.onSwipe(viewHolder.getAdapterPosition());
         }
     }
 
     /**
      * 设置监听器，用于更新数据和UI
      *
-     * @param onItemTouchCallbackListener OnItemTouchCallbackListener
+     * @param onItemSwipeListener OnItemSwipeListener
      */
-    public final void setOnItemTouchCallbackListener(OnItemTouchCallbackListener onItemTouchCallbackListener) {
-        if (mOnItemTouchCallbackListener == null) {
-            mOnItemTouchCallbackListener = onItemTouchCallbackListener;
+    public final void setOnItemSwipeListener(OnItemSwipeListener onItemSwipeListener) {
+        if (mOnItemSwipeListener == null) {
+            mOnItemSwipeListener = onItemSwipeListener;
         }
     }
 
+    public interface OnItemSwipeListener {
+        /**
+         * 滑动删除数据
+         *
+         * @param position 滑动的位置
+         */
+        void onSwipe(int position);
+    }
+
     /**
+     * 设置监听器，用于更新数据和UI
      *
+     * @param onItemSwipeListener OnItemSwipeListener
      */
-    public interface OnItemTouchCallbackListener {
+    public final void setOnItemDragListener(OnItemDragListener onItemSwipeListener) {
+        if (mOnItemDragListener == null) {
+            mOnItemDragListener = onItemSwipeListener;
+        }
+    }
+
+    public interface OnItemDragListener {
         /**
          * 移动数据
          *
@@ -299,12 +317,5 @@ public class SwipeDragCallback extends ItemTouchHelper.Callback {
          * @return boolean
          */
         boolean onMove(int fromPosition, int toPosition);
-
-        /**
-         * 滑动删除数据
-         *
-         * @param position 滑动的位置
-         */
-        void onSwiped(int position);
     }
 }

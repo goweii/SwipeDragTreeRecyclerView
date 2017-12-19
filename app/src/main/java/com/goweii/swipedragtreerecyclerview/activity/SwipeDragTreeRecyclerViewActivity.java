@@ -53,6 +53,7 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
     private int mOrientationType;
     private int mSpanCount;
     private int mDataCount;
+    private int[] mSubCount;
     private ArrayList<TreeData> mDatas = null;
     private RecyclerView mSwipeDragTreeRecyclerView;
     private TestBaseSwipeDragTreeAdapter mTestBaseSwipeDragTreeAdapter;
@@ -67,6 +68,7 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
         mOrientationType = intent.getIntExtra(MainActivity.OrientationType.NAME, MainActivity.OrientationType.VERTICAL);
         mSpanCount = intent.getIntExtra(MainActivity.SpanCount.NAME, MainActivity.SpanCount.DEFAULT);
         mDataCount = intent.getIntExtra(MainActivity.DataCount.NAME, MainActivity.DataCount.DEFAULT);
+        mSubCount = intent.getIntArrayExtra(MainActivity.SubCount.NAME);
 
         initData();
         initView();
@@ -75,6 +77,7 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
         initExpandAllBtnText(mTestBaseSwipeDragTreeAdapter.getItemCount());
         initCheckBox();
     }
+
     private void initView() {
         mSwipeDragTreeRecyclerView = findViewById(R.id.swipe_drag_tree_recyclerView);
 
@@ -224,18 +227,19 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
         mTestBaseSwipeDragTreeAdapter = new TestBaseSwipeDragTreeAdapter(mOrientationType);
         mSwipeDragTreeRecyclerView.setAdapter(mTestBaseSwipeDragTreeAdapter);
         mTestBaseSwipeDragTreeAdapter.init(mDatas);
-        mTestBaseSwipeDragTreeAdapter.setOnItemTouchCallbackListener(new SwipeDragTreeCallback.OnItemTouchCallbackListener() {
+        mTestBaseSwipeDragTreeAdapter.setOnItemSwipeListener(new SwipeDragTreeCallback.OnItemSwipeListener() {
+            @Override
+            public void onSwipe(int position) {
+                mTestBaseSwipeDragTreeAdapter.notifyItemSwipe(position);
+            }
+        });
+        mTestBaseSwipeDragTreeAdapter.setOnItemDragListener(new SwipeDragTreeCallback.OnItemDragListener() {
             @Override
             public boolean onMove(int fromPosition, int toPosition) {
                 mTestBaseSwipeDragTreeAdapter.notifyItemDrag(fromPosition, toPosition);
                 return true;
             }
-            @Override
-            public void onSwiped(int position) {
-                mTestBaseSwipeDragTreeAdapter.notifyItemSwiped(position);
-            }
-        }).attachToRecyclerView(mSwipeDragTreeRecyclerView);
-
+        });
         mTestBaseSwipeDragTreeAdapter.setSwipeBackgroundColorEnabled(true);
         mTestBaseSwipeDragTreeAdapter.setMemoryExpandState(true);
 
@@ -274,6 +278,7 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
             public void onExpand(int itemCount) {
                 initExpandAllBtnText(itemCount);
             }
+
             @Override
             public void onUnExpand(int itemCount) {
                 initExpandAllBtnText(itemCount);
@@ -329,20 +334,31 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
     private void initData() {
         mDatas = new ArrayList<>();
         for (int i = 0; i < mDataCount; i++) {
-            ArrayList<TreeData> dataTrees1 = new ArrayList<>();
-            int mSubCount = 5;
-            for (int j = 0; j < mSubCount; j++) {
-                ArrayList<TreeData> dataTrees2 = new ArrayList<>();
-                for (int k = 0; k < mSubCount; k++) {
-                    ArrayList<TreeData> dataTrees3 = new ArrayList<>();
-                    for (int l = 0; l < mSubCount; l++) {
-                        ArrayList<TreeData> dataTrees4 = new ArrayList<>();
-                        for (int m = 0; m < mSubCount; m++) {
+            ArrayList<TreeData> dataTrees1 = null;
+            for (int j = 0; j < mSubCount[0]; j++) {
+                ArrayList<TreeData> dataTrees2 = null;
+                for (int k = 0; k < mSubCount[1]; k++) {
+                    ArrayList<TreeData> dataTrees3 = null;
+                    for (int l = 0; l < mSubCount[2]; l++) {
+                        ArrayList<TreeData> dataTrees4 = null;
+                        for (int m = 0; m < mSubCount[3]; m++) {
+                            if (dataTrees4 == null) {
+                                dataTrees4 = new ArrayList<>();
+                            }
                             dataTrees4.add(new TreeData("五级分组" + m, TestTreeState.TYPE_LEAF));
+                        }
+                        if (dataTrees3 == null) {
+                            dataTrees3 = new ArrayList<>();
                         }
                         dataTrees3.add(new TreeData("四级分组" + l, TestTreeState.TYPE_FOUR, dataTrees4));
                     }
+                    if (dataTrees2 == null) {
+                        dataTrees2 = new ArrayList<>();
+                    }
                     dataTrees2.add(new TreeData("三级分组" + k, TestTreeState.TYPE_THREE, dataTrees3));
+                }
+                if (dataTrees1 == null) {
+                    dataTrees1 = new ArrayList<>();
                 }
                 dataTrees1.add(new TreeData("二级分组" + j, TestTreeState.TYPE_TEO, dataTrees2));
             }

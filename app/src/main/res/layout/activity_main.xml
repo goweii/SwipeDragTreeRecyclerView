@@ -22,8 +22,9 @@
             android:padding="10dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="2"
                 android:orientation="vertical"
                 android:padding="3dp">
 
@@ -41,9 +42,9 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:orientation="vertical"
                 android:padding="3dp">
 
@@ -89,9 +90,9 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:orientation="vertical"
                 android:padding="3dp">
 
@@ -130,8 +131,9 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="2"
                 android:orientation="vertical"
                 android:padding="3dp">
 
@@ -159,13 +161,14 @@
             android:padding="10dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:padding="3dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:paddingBottom="10dp"
@@ -173,28 +176,90 @@
 
                 <NumberPicker
                     android:id="@+id/numberPicker_levelCount"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:padding="3dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:paddingBottom="10dp"
-                    android:text="@string/numberPicker_subCount" />
+                    android:text="@string/numberPicker_subCount1" />
 
                 <NumberPicker
-                    android:id="@+id/numberPicker_subCount"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/numberPicker_subCount1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="3dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:text="@string/numberPicker_subCount2" />
+
+                <NumberPicker
+                    android:id="@+id/numberPicker_subCount2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="3dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:text="@string/numberPicker_subCount3" />
+
+                <NumberPicker
+                    android:id="@+id/numberPicker_subCount3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="3dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:text="@string/numberPicker_subCount4" />
+
+                <NumberPicker
+                    android:id="@+id/numberPicker_subCount4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout

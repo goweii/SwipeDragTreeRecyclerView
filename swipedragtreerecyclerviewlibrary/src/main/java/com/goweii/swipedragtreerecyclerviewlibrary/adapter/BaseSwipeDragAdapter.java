@@ -3,6 +3,7 @@ package com.goweii.swipedragtreerecyclerviewlibrary.adapter;
 import android.annotation.SuppressLint;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IdRes;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -29,8 +30,18 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
      * 反正这里别赋值null就对了
      */
     private SparseArray<SparseIntArray> mTypeStartDragViewIds;
-    private ItemTouchHelper mItemTouchHelper = null;
+
+    private RecyclerView mRecyclerView = null;
     private SwipeDragCallback mCallback = null;
+    private ItemTouchHelper mItemTouchHelper = null;
+
+    private boolean mLongPressDragEnabled = false;
+    private boolean mItemViewSwipeEnabled = false;
+    private boolean mSwipeBackgroundColorEnabled = false;
+    private int mSwipeBackgroundColor = 0xFFFF4081;
+    private int mCustomSwipeFlag = TouchFlag.UP | TouchFlag.DOWN | TouchFlag.LEFT | TouchFlag.RIGHT;
+    private int mCustomDragFlag = TouchFlag.UP | TouchFlag.DOWN | TouchFlag.LEFT | TouchFlag.RIGHT;
+
     private final static long LONG_PRESS_DRAG_ENABLED_LATER = 500;
 
     protected static final class StartDragFlag {
@@ -50,14 +61,14 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
     }
 
     /**
-     * 滑动删除，在实现的 onSwiped() 方法中调用
-     * {@link SwipeDragCallback.OnItemTouchCallbackListener#onSwiped(int)}
+     * 滑动删除，在实现的 onSwipe() 方法中调用
+     * {@link SwipeDragCallback.OnItemSwipeListener#onSwipe(int)}
      *
      * @param position 滑动位置
      */
-    public final void notifyItemSwiped(int position) {
+    public final void notifyItemSwipe(int position) {
         setItemViewSwipeEnabled(false);
-        itemSwiped(position);
+        itemSwipe(position);
         this.notifyItemRemoved(position);
         setItemViewSwipeEnabled(true);
     }
@@ -67,7 +78,7 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
      *
      * @param position 删除位置
      */
-    private void itemSwiped(int position) {
+    private void itemSwipe(int position) {
         synchronized (this) {
             swipedData(position);
             swipedState(position);
@@ -94,7 +105,7 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
 
     /**
      * 拖拽移动位置，在实现的 onMove() 方法中调用
-     * {@link SwipeDragCallback.OnItemTouchCallbackListener#onMove(int, int)}
+     * {@link SwipeDragCallback.OnItemDragListener#onMove(int, int)}
      *
      * @param currentPosition 拖拽位置
      * @param targetPosition  目标位置
@@ -174,21 +185,49 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
         return mTypeStartDragViewIds == null ? null : mTypeStartDragViewIds.get(viewType);
     }
 
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        mRecyclerView = recyclerView;
+    }
+
+    private void openItemTouchHelper() {
+        mCallback = getNewCallback();
+        mItemTouchHelper = new ItemTouchHelper(mCallback);
+        mCallback.setItemViewSwipeEnabled(mItemViewSwipeEnabled);
+        mCallback.setLongPressDragEnabled(mLongPressDragEnabled);
+        mCallback.setCustomSwipeFlag(mCustomSwipeFlag);
+        mCallback.setCustomDragFlag(mCustomDragFlag);
+        mCallback.setSwipeBackgroundColorEnabled(mSwipeBackgroundColorEnabled);
+        mCallback.setSwipeBackgroundColor(mSwipeBackgroundColor);
+        if (mRecyclerView != null) {
+            mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+        }
+    }
+
+    private void closeItemTouchHelper() {
+        mItemTouchHelper = null;
+        mCallback = null;
+    }
+
     /**
-     * 为了方便使用，可直接调用 adapter 的 setOnItemTouchCallbackListener() 方法获取 ItemTouchHelper
+     * 为了方便使用，可直接调用 adapter 的 setOnItemSwipeListener() 方法获取 ItemTouchHelper
      * 然后调用 ItemTouchHelper 的 attachToRecyclerView() 方法绑定 RecyclerView
      * 绑定后默认开启拖拽和滑动，若要关闭调用 adapter 的设置方法即可
      *
-     * @param onItemTouchCallbackListener 调用时实现该接口
-     * @return mItemTouchHelper
+     * @param onItemSwipeListener 调用时实现该接口
      */
-    public final ItemTouchHelper setOnItemTouchCallbackListener(SwipeDragCallback.OnItemTouchCallbackListener onItemTouchCallbackListener) {
-        if (mItemTouchHelper == null && mCallback == null) {
-            mCallback = getNewCallback();
-            mItemTouchHelper = new ItemTouchHelper(mCallback);
+    public final void setOnItemSwipeListener(SwipeDragCallback.OnItemSwipeListener onItemSwipeListener) {
+        if (mCallback == null) {
+            setItemViewSwipeEnabled(true);
         }
-        mCallback.setOnItemTouchCallbackListener(onItemTouchCallbackListener);
-        return mItemTouchHelper;
+        mCallback.setOnItemSwipeListener(onItemSwipeListener);
+    }
+
+    public final void setOnItemDragListener(SwipeDragCallback.OnItemDragListener onItemDragListener) {
+        if (mCallback == null) {
+            setLongPressDragEnabled(true);
+        }
+        mCallback.setOnItemDragListener(onItemDragListener);
     }
 
     /**
@@ -201,65 +240,78 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
     }
 
     /**
-     * 设置开启关闭拖拽
-     * 需要在调用绑定监听器方法后调用设置，默认开启
-     * {@link #setOnItemTouchCallbackListener(SwipeDragCallback.OnItemTouchCallbackListener)}
-     * 默认开启
-     *
-     * @param longPressDragEnabled longPressDragEnabled
-     */
-    public final void setLongPressDragEnabled(boolean longPressDragEnabled) {
-        if (mCallback != null) {
-            mCallback.setLongPressDragEnabled(longPressDragEnabled);
-        }
-    }
-
-    public final boolean isLongPressDragEnabled() {
-        return mCallback != null && mCallback.isLongPressDragEnabled();
-    }
-
-    /**
      * 设置开启关闭滑动
-     * 需要在调用绑定监听器方法后调用设置，默认开启
-     * {@link #setOnItemTouchCallbackListener(SwipeDragCallback.OnItemTouchCallbackListener)}
      *
      * @param itemViewSwipeEnabled itemViewSwipeEnabled
      */
     public final void setItemViewSwipeEnabled(boolean itemViewSwipeEnabled) {
-        if (mCallback != null) {
-            mCallback.setItemViewSwipeEnabled(itemViewSwipeEnabled);
+        mItemViewSwipeEnabled = itemViewSwipeEnabled;
+        if (!(mLongPressDragEnabled || mItemViewSwipeEnabled || mSwipeBackgroundColorEnabled)) {
+            closeItemTouchHelper();
+        } else {
+            if (mCallback == null) {
+                openItemTouchHelper();
+            } else {
+                mCallback.setItemViewSwipeEnabled(itemViewSwipeEnabled);
+            }
         }
     }
 
-    public final boolean isItemViewSwipeEnabled() {
-        return mCallback != null && mCallback.isItemViewSwipeEnabled();
+    /**
+     * 设置开启关闭拖拽
+     *
+     * @param longPressDragEnabled longPressDragEnabled
+     */
+    public final void setLongPressDragEnabled(boolean longPressDragEnabled) {
+        mLongPressDragEnabled = longPressDragEnabled;
+        if (!(mLongPressDragEnabled || mItemViewSwipeEnabled || mSwipeBackgroundColorEnabled)) {
+            closeItemTouchHelper();
+        } else {
+            if (mCallback == null) {
+                openItemTouchHelper();
+            } else {
+                mCallback.setLongPressDragEnabled(mLongPressDragEnabled);
+            }
+        }
     }
 
     /**
      * 设置开启关闭滑动删除时是否背景变色
-     * 需要在调用绑定监听器方法后调用设置，默认开启
-     * {@link #setOnItemTouchCallbackListener(SwipeDragCallback.OnItemTouchCallbackListener)}
      *
      * @param swipeBackgroundColorEnabled swipeBackgroundColorEnabled
      */
     public final void setSwipeBackgroundColorEnabled(boolean swipeBackgroundColorEnabled) {
-        if (mCallback != null) {
-            mCallback.setSwipeBackgroundColorEnabled(swipeBackgroundColorEnabled);
+        mSwipeBackgroundColorEnabled = swipeBackgroundColorEnabled;
+        if (!(mLongPressDragEnabled || mItemViewSwipeEnabled || mSwipeBackgroundColorEnabled)) {
+            closeItemTouchHelper();
+        } else {
+            if (mCallback == null) {
+                openItemTouchHelper();
+            } else {
+                mCallback.setSwipeBackgroundColorEnabled(swipeBackgroundColorEnabled);
+            }
         }
     }
 
+    public final boolean isLongPressDragEnabled() {
+        return mLongPressDragEnabled;
+    }
+
+    public final boolean isItemViewSwipeEnabled() {
+        return mItemViewSwipeEnabled;
+    }
+
     public final boolean isSwipeBackgroundColorEnabled() {
-        return mCallback != null && mCallback.isSwipeBackgroundColorEnabled();
+        return mSwipeBackgroundColorEnabled;
     }
 
     /**
      * 设置滑动删除时背景色
-     * 需要在调用绑定监听器方法后调用设置，默认开启
-     * {@link #setOnItemTouchCallbackListener(SwipeDragCallback.OnItemTouchCallbackListener)}
      *
      * @param swipeBackgroundColor 颜色资源id
      */
     public final void setSwipeBackgroundColor(@ColorInt int swipeBackgroundColor) {
+        mSwipeBackgroundColor = swipeBackgroundColor;
         if (mCallback != null) {
             mCallback.setSwipeBackgroundColor(swipeBackgroundColor);
         }
@@ -267,12 +319,11 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
 
     /**
      * 设置可以滑动删除的方向
-     * 需要在调用绑定监听器方法后调用设置，默认2个方向，垂直于列表滚动
-     * {@link #setOnItemTouchCallbackListener(SwipeDragCallback.OnItemTouchCallbackListener)}
      *
      * @param customSwipeFlag customSwipeFlag
      */
     public final void setCustomSwipeFlag(int customSwipeFlag) {
+        mCustomSwipeFlag = customSwipeFlag;
         if (mCallback != null) {
             mCallback.setCustomSwipeFlag(customSwipeFlag);
         }
@@ -280,12 +331,11 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
 
     /**
      * 设置可以拖拽的方向
-     * 需要在调用绑定监听器方法后调用设置，默认4 个方向全部开启
-     * {@link #setOnItemTouchCallbackListener(SwipeDragCallback.OnItemTouchCallbackListener)}
      *
      * @param customDragFlag customDragFlag
      */
     public final void setCustomDragFlag(int customDragFlag) {
+        mCustomDragFlag = customDragFlag;
         if (mCallback != null) {
             mCallback.setCustomDragFlag(customDragFlag);
         }

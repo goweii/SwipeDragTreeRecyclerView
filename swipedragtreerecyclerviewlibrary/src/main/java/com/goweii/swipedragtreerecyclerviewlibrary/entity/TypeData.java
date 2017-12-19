@@ -1,6 +1,5 @@
 package com.goweii.swipedragtreerecyclerviewlibrary.entity;
 
-import com.goweii.swipedragtreerecyclerviewlibrary.entity.interfaces.IData;
 import com.goweii.swipedragtreerecyclerviewlibrary.entity.interfaces.ISelected;
 import com.goweii.swipedragtreerecyclerviewlibrary.entity.interfaces.IType;
 
@@ -10,7 +9,7 @@ import com.goweii.swipedragtreerecyclerviewlibrary.entity.interfaces.IType;
  * @author cuizhen
  * @date 2017/11/22
  */
-public class TypeData implements IData, IType, ISelected {
+public class TypeData implements IType, ISelected {
     private Object mData;
     private int mType;
     private boolean mSelected;
@@ -26,12 +25,10 @@ public class TypeData implements IData, IType, ISelected {
         mType = type;
     }
 
-    @Override
     public Object getData() {
         return mData;
     }
 
-    @Override
     public void setData(Object data) {
         mData = data;
     }

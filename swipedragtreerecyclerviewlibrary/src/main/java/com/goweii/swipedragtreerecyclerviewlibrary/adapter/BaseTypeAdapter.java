@@ -20,8 +20,8 @@ import java.util.ArrayList;
  * @date 2017/12/11
  */
 public abstract class BaseTypeAdapter extends RecyclerView.Adapter<BaseTypeAdapter.BaseViewHolder> {
-    private ArrayList<TypeData> mDatas = null;
-    private ArrayList<TypeState> mStates = null;
+    private ArrayList mDatas = null;
+    private ArrayList mStates = null;
     private SparseIntArray mTypeLayoutIds = null;
     private SparseArray<SparseIntArray> mTypeViewIds = null;
 
@@ -50,7 +50,7 @@ public abstract class BaseTypeAdapter extends RecyclerView.Adapter<BaseTypeAdapt
      * @param datas 数据，ArrayList类型
      */
     public final void init(ArrayList datas) {
-        initDatas(datas);
+        setDatas(datas);
         initStates();
         notifyDataSetChanged();
     }
@@ -61,8 +61,12 @@ public abstract class BaseTypeAdapter extends RecyclerView.Adapter<BaseTypeAdapt
      *
      * @param datas ArrayList
      */
-    protected void initDatas(ArrayList datas) {
+    protected void setDatas(ArrayList datas) {
         mDatas = datas;
+    }
+
+    protected void setStates(ArrayList states) {
+        mStates = states;
     }
 
     /**
@@ -70,14 +74,13 @@ public abstract class BaseTypeAdapter extends RecyclerView.Adapter<BaseTypeAdapt
      * 需要在子类中重写该方法
      */
     protected void initStates() {
-        if (mStates == null) {
-            mStates = new ArrayList<>();
-        }
-        for (int i = 0; i < getDatasSize(); i++) {
+        ArrayList<TypeState> states = new ArrayList<>();
+        for (int i = 0; i < getDatas().size(); i++) {
             TypeState state = new TypeState();
             state.setType(getData(i).getType());
-            mStates.add(state);
+            states.add(state);
         }
+        setStates(states);
     }
 
     protected ArrayList getDatas() {
@@ -88,27 +91,19 @@ public abstract class BaseTypeAdapter extends RecyclerView.Adapter<BaseTypeAdapt
         return mStates;
     }
 
-    protected int getDatasSize() {
-        return mDatas == null ? 0 : mDatas.size();
-    }
-
-    protected int getStatesSize() {
-        return mStates == null ? 0 : mStates.size();
-    }
-
     protected TypeData getData(int position) {
-        return mDatas.get(position);
+        return (TypeData) mDatas.get(position);
     }
 
     protected TypeState getState(int position) {
-        return mStates.get(position);
+        return (TypeState) mStates.get(position);
     }
 
     /**
      * 用于初始化布局类型，布局资源id，控件id，控件是否可点击和长按等
      * 实现后调用 {@link #putTypeLayoutViewIds(int, int, int[], int[])} 方法添加数据
      */
-    public abstract void initIds();
+    protected abstract void initIds();
 
     /**
      * 需要在实现 {@link #initIds()} 中调用
@@ -176,9 +171,8 @@ public abstract class BaseTypeAdapter extends RecyclerView.Adapter<BaseTypeAdapt
      */
     @Override
     public final int getItemCount() {
-        return getStatesSize();
+        return getStates().size();
     }
-
 
     @Override
     public final BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
