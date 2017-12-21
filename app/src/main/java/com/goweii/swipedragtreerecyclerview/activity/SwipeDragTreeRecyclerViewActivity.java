@@ -451,7 +451,7 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
     private void expandUnexpandAll() {
         boolean isAllExpand = mTestBaseSwipeDragTreeAdapter.isAllExpand();
         if (isAllExpand) {
-            mTestBaseSwipeDragTreeAdapter.unExpandAll();
+            mTestBaseSwipeDragTreeAdapter.collapseAll();
             String all = getResources().getString(R.string.btn_expand_all);
             int count = mTestBaseSwipeDragTreeAdapter.getItemCount();
             mBtnExpandUnexpandAll.setText((all + "(" + count + ")"));

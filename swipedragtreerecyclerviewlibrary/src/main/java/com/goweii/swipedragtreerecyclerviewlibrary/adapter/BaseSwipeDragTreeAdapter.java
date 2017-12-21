@@ -76,7 +76,7 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
         TreeState state = getState(position);
         int[] positions = state.getPositions();
         if (state.isExpand()) {
-            closeGroup(position, position);
+            collapse(position, position);
         }
         int lastIndex = positions.length - 1;
         int count = 0;
@@ -246,7 +246,7 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
     public final void expandAll() {
         for (int i = 0; i < getStates().size(); i++) {
             if (!getData(i).isLeaf() && !getState(i).isExpand()) {
-                openGroup(i, i);
+                expand(i, i);
             }
         }
         notifyDataSetChanged();
@@ -255,10 +255,10 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
     /**
      * 关闭所有分组
      */
-    public final void unExpandAll() {
+    public final void collapseAll() {
         for (int i = 0; i < getStates().size(); i++) {
             if (!getData(i).isLeaf() && getState(i).isExpand()) {
-                closeGroup(i, i);
+                collapse(i, i);
             }
         }
     }
@@ -273,7 +273,7 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
      * @param clickPosition 点击位置（在方法内部使用，外部传入时和 position 相同即可）
      * @param position      打开的位置
      */
-    private void openGroup(int clickPosition, int position) {
+    private void expand(int clickPosition, int position) {
         synchronized (this) {
             TreeState state = getState(position);
             int[] positions = state.getPositions();
@@ -297,7 +297,7 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
             notifyItemRangeInserted(position + 1, count);
             for (int i = count - 1; i >= 0; i--) {
                 if (getState(position + i + 1).isExpand()) {
-                    openGroup(clickPosition, position + i + 1);
+                    expand(clickPosition, position + i + 1);
                 }
             }
             //所有循环结束后，调用分组展开状态变化接口
@@ -315,14 +315,14 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
      * @param clickPosition 点击的位置（在方法内部使用，外部传入时和 position 相同即可）
      * @param position      关闭的位置
      */
-    private void closeGroup(int clickPosition, int position) {
+    private void collapse(int clickPosition, int position) {
         synchronized (this) {
             TreeData treeData = getData(position);
             ArrayList<TreeData> treeDatas = treeData.getList();
             int count = treeDatas.size();
             for (int i = 0; i < count; i++) {
                 if (getState(position + i + 1).isExpand()) {
-                    closeGroup(clickPosition, position + i + 1);
+                    collapse(clickPosition, position + i + 1);
                 }
             }
             for (int i = 0; i < count; i++) {
@@ -355,7 +355,7 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
             public void onSwipe(int position) {
                 TreeState positionState = getState(position);
                 if (positionState.isExpand()) {
-                    closeGroup(position, position);
+                    collapse(position, position);
                 }
             }
 
@@ -363,7 +363,7 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
             public void onDrag(int position) {
                 TreeState positionState = getState(position);
                 if (positionState.isExpand()) {
-                    closeGroup(position, position);
+                    collapse(position, position);
                 }
             }
         });
@@ -425,9 +425,9 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
                 if (!treeData.isLeaf()) {
                     TreeState state = getState(position);
                     if (state.isExpand()) {
-                        closeGroup(position, position);
+                        collapse(position, position);
                     } else {
-                        openGroup(position, position);
+                        expand(position, position);
                     }
                 }
             } catch (Exception e) {
