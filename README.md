@@ -14,7 +14,7 @@
 
    ## **下载**
 
-   - Demo：[下载](https://github.com/goweii/SwipeDragTreeRecyclerView/releases/download/v1.0.0/SwipeDragTreeRecyclerView_debug_v1.0.0.apk)
+   - Demo：[下载](https://github.com/goweii/SwipeDragTreeRecyclerView/releases/download/v1.1.0/SwipeDragTreeRecyclerView_demo_v1.1.0.apk)
 
    ## **截图**
 
