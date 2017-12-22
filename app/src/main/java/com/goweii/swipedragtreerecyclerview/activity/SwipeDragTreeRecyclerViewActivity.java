@@ -88,11 +88,19 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
         mSwipeDragTreeRecyclerView = findViewById(R.id.swipe_drag_tree_recyclerView);
 
         mBtnOpenCloseSwipe = findViewById(R.id.btn_open_close_swipe);
+        mBtnOpenCloseSwipe.setTextColor(getResources().getColor(R.color.colorAccent));
         mBtnOpenCloseSwipe.setOnClickListener(this);
         mBtnOpenCloseDrag = findViewById(R.id.btn_open_close_drag);
+        mBtnOpenCloseDrag.setTextColor(getResources().getColor(R.color.colorAccent));
         mBtnOpenCloseDrag.setOnClickListener(this);
         mBtnOpenCloseSwipeBackgroundColor = findViewById(R.id.btn_open_close_swipe_background_color);
+        mBtnOpenCloseSwipeBackgroundColor.setTextColor(getResources().getColor(R.color.colorAccent));
         mBtnOpenCloseSwipeBackgroundColor.setOnClickListener(this);
+        mBtnOpenCloseMemoryExpand = findViewById(R.id.btn_open_close_memory_expand);
+        mBtnOpenCloseMemoryExpand.setTextColor(getResources().getColor(R.color.colorAccent));
+        mBtnOpenCloseMemoryExpand.setOnClickListener(this);
+        mBtnExpandUnexpandAll = findViewById(R.id.btn_expand_unexpand_all);
+        mBtnExpandUnexpandAll.setOnClickListener(this);
 
         mRadioGroupCheckDragFlag = findViewById(R.id.radioGroup_check_dragFlag);
         mCheckBoxDragFlagLeft = findViewById(R.id.checkBox_drag_flag_left);
@@ -116,10 +124,6 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
 
         mRadioGroupChooseSwipeColor = findViewById(R.id.radioGroup_choose_swipe_color);
         mRadioGroupChooseSwipeColor.setOnCheckedChangeListener(this);
-        mBtnOpenCloseMemoryExpand = findViewById(R.id.btn_open_close_memory_expand);
-        mBtnOpenCloseMemoryExpand.setOnClickListener(this);
-        mBtnExpandUnexpandAll = findViewById(R.id.btn_expand_unexpand_all);
-        mBtnExpandUnexpandAll.setOnClickListener(this);
     }
 
     private void initSwipeDragFlag() {
@@ -406,9 +410,11 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
         mTestBaseSwipeDragTreeAdapter.setItemViewSwipeEnabled(isEnabled);
         if (isEnabled) {
             mBtnOpenCloseSwipe.setText(R.string.btn_close_swipe);
+            mBtnOpenCloseSwipe.setTextColor(getResources().getColor(R.color.colorAccent));
             enableRadioGroup(mRadioGroupCheckSwipeFlag);
         } else {
             mBtnOpenCloseSwipe.setText(R.string.btn_open_swipe);
+            mBtnOpenCloseSwipe.setTextColor(getResources().getColor(R.color.colorBlack));
             disableRadioGroup(mRadioGroupCheckSwipeFlag);
         }
     }
@@ -419,9 +425,11 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
         mTestBaseSwipeDragTreeAdapter.setLongPressDragEnabled(isEnabled);
         if (isEnabled) {
             mBtnOpenCloseDrag.setText(R.string.btn_close_drag);
+            mBtnOpenCloseDrag.setTextColor(getResources().getColor(R.color.colorAccent));
             enableRadioGroup(mRadioGroupCheckDragFlag);
         } else {
             mBtnOpenCloseDrag.setText(R.string.btn_open_drag);
+            mBtnOpenCloseDrag.setTextColor(getResources().getColor(R.color.colorBlack));
             disableRadioGroup(mRadioGroupCheckDragFlag);
         }
     }
@@ -431,9 +439,11 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
         mTestBaseSwipeDragTreeAdapter.setSwipeBackgroundColorEnabled(isEnabled);
         if (isEnabled) {
             mBtnOpenCloseSwipeBackgroundColor.setText(R.string.btn_close_swipe_background_color);
+            mBtnOpenCloseSwipeBackgroundColor.setTextColor(getResources().getColor(R.color.colorAccent));
             enableRadioGroup(mRadioGroupChooseSwipeColor);
         } else {
             mBtnOpenCloseSwipeBackgroundColor.setText(R.string.btn_open_swipe_background_color);
+            mBtnOpenCloseSwipeBackgroundColor.setTextColor(getResources().getColor(R.color.colorBlack));
             disableRadioGroup(mRadioGroupChooseSwipeColor);
         }
     }
@@ -443,8 +453,10 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
         mTestBaseSwipeDragTreeAdapter.setMemoryExpandState(isEnabled);
         if (isEnabled) {
             mBtnOpenCloseMemoryExpand.setText(R.string.btn_close_memory_expand);
+            mBtnOpenCloseMemoryExpand.setTextColor(getResources().getColor(R.color.colorAccent));
         } else {
             mBtnOpenCloseMemoryExpand.setText(R.string.btn_open_memory_expand);
+            mBtnOpenCloseMemoryExpand.setTextColor(getResources().getColor(R.color.colorBlack));
         }
     }
 
@@ -455,11 +467,13 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
             String all = getResources().getString(R.string.btn_expand_all);
             int count = mTestBaseSwipeDragTreeAdapter.getItemCount();
             mBtnExpandUnexpandAll.setText((all + "(" + count + ")"));
+            mBtnExpandUnexpandAll.setTextColor(getResources().getColor(R.color.colorBlack));
         } else {
             mTestBaseSwipeDragTreeAdapter.expandAll();
             String all = getResources().getString(R.string.btn_unexpand_all);
             int count = mTestBaseSwipeDragTreeAdapter.getItemCount();
             mBtnExpandUnexpandAll.setText((all + "(" + count + ")"));
+            mBtnExpandUnexpandAll.setTextColor(getResources().getColor(R.color.colorAccent));
         }
     }
 
@@ -468,24 +482,20 @@ public class SwipeDragTreeRecyclerViewActivity extends AppCompatActivity impleme
         if (isAllExpand) {
             String str = getResources().getString(R.string.btn_unexpand_all);
             mBtnExpandUnexpandAll.setText((str + "(" + itemCount + ")"));
+            mBtnExpandUnexpandAll.setTextColor(getResources().getColor(R.color.colorAccent));
         } else {
             String str = getResources().getString(R.string.btn_expand_all);
             mBtnExpandUnexpandAll.setText((str + "(" + itemCount + ")"));
+            mBtnExpandUnexpandAll.setTextColor(getResources().getColor(R.color.colorBlack));
         }
     }
 
 
     private void disableRadioGroup(RadioGroup radioGroup) {
-//        for (int i = 0; i < radioGroup.getChildCount(); i++) {
-//            radioGroup.getChildAt(i).setEnabled(false);
-//        }
         radioGroup.setVisibility(View.GONE);
     }
 
     private void enableRadioGroup(RadioGroup radioGroup) {
-//        for (int i = 0; i < radioGroup.getChildCount(); i++) {
-//            radioGroup.getChildAt(i).setEnabled(true);
-//        }
         radioGroup.setVisibility(View.VISIBLE);
     }
 

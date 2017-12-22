@@ -204,9 +204,8 @@ public abstract class BaseSwipeDragAdapter extends BaseTypeAdapter {
         }
     }
 
-    private void closeItemTouchHelper() {
-//        mItemTouchHelper = null;
-//        mCallback = null;
+    protected RecyclerView getRecyclerView() {
+        return mRecyclerView;
     }
 
     /**

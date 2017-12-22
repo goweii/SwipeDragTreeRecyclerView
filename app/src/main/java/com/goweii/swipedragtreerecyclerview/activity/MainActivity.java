@@ -1,6 +1,8 @@
 package com.goweii.swipedragtreerecyclerview.activity;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -239,8 +241,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mCustomLongClickEnable = !mCustomLongClickEnable;
         if (mCustomLongClickEnable) {
             mBtnOpenCloseCustomLongClick.setText(R.string.btn_close_customView_long_click);
+            mBtnOpenCloseCustomLongClick.setTextColor(getResources().getColor(R.color.colorAccent));
         } else {
             mBtnOpenCloseCustomLongClick.setText(R.string.btn_open_customView_long_click);
+            mBtnOpenCloseCustomLongClick.setTextColor(getResources().getColor(R.color.colorBlack));
         }
     }
 
@@ -248,8 +252,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mCustomViewDragEnable = !mCustomViewDragEnable;
         if (mCustomViewDragEnable) {
             mBtnOpenCloseCustomViewDrag.setText(R.string.btn_close_customView_drag);
+            mBtnOpenCloseCustomViewDrag.setTextColor(getResources().getColor(R.color.colorAccent));
         } else {
             mBtnOpenCloseCustomViewDrag.setText(R.string.btn_open_customView_drag);
+            mBtnOpenCloseCustomViewDrag.setTextColor(getResources().getColor(R.color.colorBlack));
         }
     }
 
@@ -257,8 +263,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mItemLongClickEnable = !mItemLongClickEnable;
         if (mItemLongClickEnable) {
             mBtnOpenCloseItemLongClick.setText(R.string.btn_close_itemView_long_click);
+            mBtnOpenCloseItemLongClick.setTextColor(getResources().getColor(R.color.colorAccent));
         } else {
             mBtnOpenCloseItemLongClick.setText(R.string.btn_open_itemView_long_click);
+            mBtnOpenCloseItemLongClick.setTextColor(getResources().getColor(R.color.colorBlack));
         }
     }
 

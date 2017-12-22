@@ -19,7 +19,7 @@
     <string name="btn_open_memory_expand">open memory expand</string>
     <string name="btn_close_memory_expand">close memory expand</string>
     <string name="btn_expand_all">expand all</string>
-    <string name="btn_unexpand_all">unexpand all</string>
+    <string name="btn_unexpand_all">collapse all</string>
 
 
     <string name="radioGroup_layoutManager">layoutManager</string>

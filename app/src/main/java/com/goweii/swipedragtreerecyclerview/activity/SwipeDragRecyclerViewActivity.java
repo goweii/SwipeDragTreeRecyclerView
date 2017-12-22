@@ -78,10 +78,13 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
     private void initView() {
         mDragSwipedRecyclerView = findViewById(R.id.swipe_drag_recyclerView);
         mBtnOpenCloseSwipe = findViewById(R.id.btn_open_close_swipe);
+        mBtnOpenCloseSwipe.setTextColor(getResources().getColor(R.color.colorAccent));
         mBtnOpenCloseSwipe.setOnClickListener(this);
         mBtnOpenCloseDrag = findViewById(R.id.btn_open_close_drag);
+        mBtnOpenCloseDrag.setTextColor(getResources().getColor(R.color.colorAccent));
         mBtnOpenCloseDrag.setOnClickListener(this);
         mBtnOpenCloseSwipeBackgroundColor = findViewById(R.id.btn_open_close_swipe_background_color);
+        mBtnOpenCloseSwipeBackgroundColor.setTextColor(getResources().getColor(R.color.colorAccent));
         mBtnOpenCloseSwipeBackgroundColor.setOnClickListener(this);
 
         mRadioGroupCheckDragFlag = findViewById(R.id.radioGroup_check_dragFlag);
@@ -340,9 +343,11 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
         mTestBaseSwipeDragAdapter.setItemViewSwipeEnabled(isEnabled);
         if (isEnabled) {
             mBtnOpenCloseSwipe.setText(R.string.btn_close_swipe);
+            mBtnOpenCloseSwipe.setTextColor(getResources().getColor(R.color.colorAccent));
             enableRadioGroup(mRadioGroupCheckSwipeFlag);
         } else {
             mBtnOpenCloseSwipe.setText(R.string.btn_open_swipe);
+            mBtnOpenCloseSwipe.setTextColor(getResources().getColor(R.color.colorBlack));
             disableRadioGroup(mRadioGroupCheckSwipeFlag);
         }
     }
@@ -353,9 +358,11 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
         mTestBaseSwipeDragAdapter.setLongPressDragEnabled(isEnabled);
         if (isEnabled) {
             mBtnOpenCloseDrag.setText(R.string.btn_close_drag);
+            mBtnOpenCloseDrag.setTextColor(getResources().getColor(R.color.colorAccent));
             enableRadioGroup(mRadioGroupCheckDragFlag);
         } else {
             mBtnOpenCloseDrag.setText(R.string.btn_open_drag);
+            mBtnOpenCloseDrag.setTextColor(getResources().getColor(R.color.colorBlack));
             disableRadioGroup(mRadioGroupCheckDragFlag);
         }
     }
@@ -365,24 +372,20 @@ public class SwipeDragRecyclerViewActivity extends AppCompatActivity implements 
         mTestBaseSwipeDragAdapter.setSwipeBackgroundColorEnabled(isEnabled);
         if (isEnabled) {
             mBtnOpenCloseSwipeBackgroundColor.setText(R.string.btn_close_swipe_background_color);
+            mBtnOpenCloseSwipeBackgroundColor.setTextColor(getResources().getColor(R.color.colorAccent));
             enableRadioGroup(mRadioGroupChooseSwipeColor);
         } else {
             mBtnOpenCloseSwipeBackgroundColor.setText(R.string.btn_open_swipe_background_color);
+            mBtnOpenCloseSwipeBackgroundColor.setTextColor(getResources().getColor(R.color.colorBlack));
             disableRadioGroup(mRadioGroupChooseSwipeColor);
         }
     }
 
     private void disableRadioGroup(RadioGroup radioGroup) {
-//        for (int i = 0; i < radioGroup.getChildCount(); i++) {
-//            radioGroup.getChildAt(i).setEnabled(false);
-//        }
         radioGroup.setVisibility(View.GONE);
     }
 
     private void enableRadioGroup(RadioGroup radioGroup) {
-//        for (int i = 0; i < radioGroup.getChildCount(); i++) {
-//            radioGroup.getChildAt(i).setEnabled(true);
-//        }
         radioGroup.setVisibility(View.VISIBLE);
     }
 

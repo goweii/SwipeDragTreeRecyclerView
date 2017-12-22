@@ -249,7 +249,6 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
                 expand(i, i);
             }
         }
-        notifyDataSetChanged();
     }
 
     /**
