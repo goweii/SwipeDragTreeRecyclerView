@@ -384,7 +384,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 sub[i]++;
             }
         }
-        LogUtil.d("---count-->", data * (1 + sub[0] * (1 + sub[1] * (1 + sub[2] * (1 + sub[3])))));
         return sub[0];
     }
 }
