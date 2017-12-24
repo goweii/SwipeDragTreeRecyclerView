@@ -276,10 +276,28 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
      * 关闭所有分组
      */
     public final void collapseAll() {
-        for (int i = 0; i < getStates().size(); i++) {
-            if (!getData(i).isLeaf() && getState(i).isExpand()) {
-                collapse(i, i);
+//        for (int i = 0; i < getStates().size(); i++) {
+//            if (!getData(i).isLeaf() && getState(i).isExpand()) {
+//                collapse(i, i);
+//            }
+//        }
+        int count = 0;
+        for (int i = getStates().size() - 1; i >= 0; i--) {
+            if (getState(i).getPositions().length == 1) {
+                notifyItemRangeRemoved(i + 1, count);
+                count = 0;
+                getState(i).setExpand(false);
+                getData(i).setExpand(false);
+            } else {
+                count++;
+                if (!mMemoryExpandState && !getData(i).isLeaf()) {
+                    getData(i).setExpand(false);
+                }
+                getStates().remove(i);
             }
+        }
+        if (mOnExpandChangeListener != null) {
+            mOnExpandChangeListener.onExpand(getItemCount());
         }
     }
 
