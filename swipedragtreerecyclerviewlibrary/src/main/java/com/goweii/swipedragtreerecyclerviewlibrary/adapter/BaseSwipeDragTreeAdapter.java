@@ -246,8 +246,29 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
     public final void expandAll() {
         for (int i = 0; i < getStates().size(); i++) {
             if (!getData(i).isLeaf() && !getState(i).isExpand()) {
-                expand(i, i);
+//                expand(i, i);
+                TreeState state = getState(i);
+                int[] positions = state.getPositions();
+                TreeData treeData = getData(i);
+                ArrayList<TreeData> dataTrees = treeData.getList();
+                treeData.setExpand(true);
+                state.setExpand(true);
+                int count = dataTrees.size();
+                for (int j = 0; j < count; j++) {
+                    TreeData childTreeData = dataTrees.get(j);
+                    TreeState newState = new TreeState();
+                    newState.setType(childTreeData.getType());
+                    int[] newPositions = Arrays.copyOf(positions, positions.length + 1);
+                    newPositions[newPositions.length - 1] = j;
+                    newState.setPositions(newPositions);
+                    newState.setExpand(false);
+                    getStates().add(i + j + 1, newState);
+                }
+                notifyItemRangeInserted(i + 1, count);
             }
+        }
+        if (mOnExpandChangeListener != null) {
+            mOnExpandChangeListener.onExpand(getItemCount());
         }
     }
 
@@ -387,12 +408,14 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
     public interface OnExpandChangeListener {
         /**
          * 分组展开
+         *
          * @param itemCount 当前adapter中item的数量
          */
         void onExpand(int itemCount);
 
         /**
          * 关闭展开
+         *
          * @param itemCount 当前adapter中item的数量
          */
         void onUnExpand(int itemCount);
@@ -400,6 +423,7 @@ public abstract class BaseSwipeDragTreeAdapter extends BaseSwipeDragAdapter {
 
     /**
      * 设置分组展开状态变化回调接口
+     *
      * @param onExpandChangeListener 分组展开状态变化回调接口
      */
     public final void setOnExpandChangeListener(OnExpandChangeListener onExpandChangeListener) {

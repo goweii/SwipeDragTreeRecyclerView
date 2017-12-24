@@ -1,4 +1,4 @@
- - # SwipeDragTreeRecyclerView 使用说明
+# SwipeDragTreeRecyclerView 使用说明
 
    [GitHub 主页](https://github.com/goweii/SwipeDragTreeRecyclerView)
 
@@ -25,7 +25,7 @@
 
    - ### 添加jitpack库
 
-   ```stylus
+   ```java
    	allprojects {
    		repositories {
    			...
@@ -36,7 +36,7 @@
 
    - ### 添加依赖
 
-   ```stylus
+   ```java
    	dependencies {
    	        compile 'com.github.goweii:SwipeDragTreeRecyclerView:v1.0.0'
    	}
@@ -44,7 +44,7 @@
 
    - ### 在xml布局文件中使用官方RecyclerView
 
-   ```stylus
+   ```java
    <android.support.v7.widget.RecyclerView
    	android:id="@+id/swipe_drag_tree_recyclerView"
    	android:layout_width="match_parent"
@@ -56,7 +56,7 @@
 
      当然，你的数据应该存放在 TreeState 中
 
-   ```stylus
+   ```java
    public class TestTreeState extends TreeState {
        public static final int TYPE_ONE = 1;
        public static final int TYPE_TEO = 2;
@@ -90,7 +90,7 @@
      - **bindData(BaseViewHolder holder, TypeData data)**
        你应该调用 holder.getItemViewType() 方法得到自定义的 item 的类别，依据类别判断 holder 绑定的数据类型，然后调用 holder 的 getView 方法获取 view 实例进行数据绑定
 
-   ```stylus
+   ```java
    public class TestBaseSwipeDragTreeAdapter extends BaseSwipeDragTreeAdapter {
        private final int mOrientationType;
 
@@ -156,7 +156,7 @@
 
    - ### 在你的 activity 中调用 init() 方法为适配器绑定数据
 
-   ```stylus
+   ```java
            mSwipeDragTreeRecyclerView.setLayoutManager(getLayoutManager());
            mSwipeDragTreeRecyclerView.setAdapter(mTestBaseSwipeDragTreeAdapter);
            mTestBaseSwipeDragTreeAdapter.init(mDatas);
