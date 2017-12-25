@@ -22,6 +22,7 @@
 
 
    ## **使用方法**
+   [![](https://www.jitpack.io/v/goweii/SwipeDragTreeRecyclerView.svg)](https://www.jitpack.io/#goweii/SwipeDragTreeRecyclerView)
 
    - ### 添加jitpack库
 
@@ -38,7 +39,7 @@
 
    ```java
    	dependencies {
-   	        compile 'com.github.goweii:SwipeDragTreeRecyclerView:v1.0.0'
+   	        compile 'com.github.goweii:SwipeDragTreeRecyclerView:v1.2.0'
    	}
    ```
 
