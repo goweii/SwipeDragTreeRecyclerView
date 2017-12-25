@@ -27,20 +27,22 @@
    - ### 添加jitpack库
 
    ```java
-   	allprojects {
-   		repositories {
-   			...
-   			maven { url 'https://jitpack.io' }
-   		}
-   	}
+   //build.gradle(Project:)
+   allprojects {
+         repositories {
+			   ...
+			   maven { url 'https://www.jitpack.io' }
+		   }
+	   }
    ```
 
    - ### 添加依赖
 
    ```java
-   	dependencies {
-   	        compile 'com.github.goweii:SwipeDragTreeRecyclerView:v1.2.0'
-   	}
+   //build.gradle(Module:)
+   dependencies {
+      compile 'com.github.goweii:SwipeDragTreeRecyclerView:v1.2.0'
+   }
    ```
 
    - ### 在xml布局文件中使用官方RecyclerView
