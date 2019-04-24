@@ -38,10 +38,12 @@
 
    - ### 添加依赖
 
+  从1.2.1版本开始，版本号前不加v，引用时需要注意。
+
    ```java
    //build.gradle(Module:)
    dependencies {
-      compile 'com.github.goweii:SwipeDragTreeRecyclerView:v1.2.0'
+      compile 'com.github.goweii:SwipeDragTreeRecyclerView:1.2.1'
    }
    ```
 
